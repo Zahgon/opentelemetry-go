@@ -1,139 +1,40 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package attribute
 
 import (
 	"fmt"
 )
 
-// KeyValue holds a key and value pair.
 type KeyValue struct {
 	Key   Key
 	Value Value
 }
 
-// Valid reports whether kv is a valid OpenTelemetry attribute.
-func (kv KeyValue) Valid() bool {
-	return kv.Key.Defined()
-}
+func (kv KeyValue) Valid() bool { _ = "STUB: not implemented"; return false }
 
-// Bool returns a [KeyValue] for a bool value.
-func Bool(k string, v bool) KeyValue {
-	return Key(k).Bool(v)
-}
+func Bool(k string, v bool) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// BoolSlice returns a [KeyValue] for a []bool value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func BoolSlice(k string, v []bool) KeyValue {
-	return Key(k).BoolSlice(v)
-}
+func BoolSlice(k string, v []bool) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Int returns a [KeyValue] for an int value.
-//
-// It is provided as a convenience for [Int64].
-func Int(k string, v int) KeyValue {
-	return Key(k).Int(v)
-}
+func Int(k string, v int) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// IntSlice returns a [KeyValue] for a []int value.
-//
-// It is provided as a convenience for [Int64Slice].
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func IntSlice(k string, v []int) KeyValue {
-	return Key(k).IntSlice(v)
-}
+func IntSlice(k string, v []int) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Int64 returns a [KeyValue] for an int64 value.
-func Int64(k string, v int64) KeyValue {
-	return Key(k).Int64(v)
-}
+func Int64(k string, v int64) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Int64Slice returns a [KeyValue] for a []int64 value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func Int64Slice(k string, v []int64) KeyValue {
-	return Key(k).Int64Slice(v)
-}
+func Int64Slice(k string, v []int64) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Float64 returns a [KeyValue] for a float64 value.
-func Float64(k string, v float64) KeyValue {
-	return Key(k).Float64(v)
-}
+func Float64(k string, v float64) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Float64Slice returns a [KeyValue] for a []float64 value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func Float64Slice(k string, v []float64) KeyValue {
-	return Key(k).Float64Slice(v)
-}
+func Float64Slice(k string, v []float64) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// String returns a [KeyValue] for a string value.
-func String(k, v string) KeyValue {
-	return Key(k).String(v)
-}
+func String(k, v string) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// StringSlice returns a [KeyValue] for a []string value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func StringSlice(k string, v []string) KeyValue {
-	return Key(k).StringSlice(v)
-}
+func StringSlice(k string, v []string) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// ByteSlice returns a [KeyValue] for a []byte value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func ByteSlice(k string, v []byte) KeyValue {
-	return Key(k).ByteSlice(v)
-}
+func ByteSlice(k string, v []byte) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Slice returns a [KeyValue] for a []Value value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-func Slice(k string, v ...Value) KeyValue {
-	return Key(k).Slice(v...)
-}
+func Slice(k string, v ...Value) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Map returns a [KeyValue] for a []KeyValue value.
-//
-// Note that many observability backends are not optimized to query, index, or
-// aggregate complex attribute values. Complex values may also carry
-// additional performance overhead. Prefer primitive values when
-// possible.
-//
-// Users should avoid providing duplicate keys; many receivers handle maps
-// containing duplicate keys unpredictably.
-//
-// The order of v is not preserved.
-func Map(k string, v ...KeyValue) KeyValue {
-	return Key(k).Map(v...)
-}
+func Map(k string, v ...KeyValue) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }
 
-// Stringer creates a new key-value pair with a passed name and a string
-// value generated by the passed Stringer interface.
-func Stringer(k string, v fmt.Stringer) KeyValue {
-	return Key(k).String(v.String())
-}
+func Stringer(k string, v fmt.Stringer) KeyValue { _ = "STUB: not implemented"; return *new(KeyValue) }

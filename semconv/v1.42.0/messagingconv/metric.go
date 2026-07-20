@@ -1,10 +1,3 @@
-// Code generated from semantic convention specification. DO NOT EDIT.
-
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package messagingconv provides types and functionality for OpenTelemetry semantic
-// conventions in the "messaging" namespace.
 package messagingconv
 
 import (
@@ -12,80 +5,56 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/noop"
-	"go.opentelemetry.io/otel/semconv/internal/metricpool"
 )
 
-// ErrorTypeAttr is an attribute conforming to the error.type semantic
-// conventions. It represents the describes a class of error the operation ended
-// with.
 type ErrorTypeAttr string
 
 var (
-	// ErrorTypeOther is a fallback error value to be used when the instrumentation
-	// doesn't define a custom value.
 	ErrorTypeOther ErrorTypeAttr = "_OTHER"
 )
 
-// OperationTypeAttr is an attribute conforming to the messaging.operation.type
-// semantic conventions. It represents a string identifying the type of the
-// messaging operation.
 type OperationTypeAttr string
 
 var (
-	// OperationTypeCreate is a message is created. "Create" spans always refer to a
-	// single message and are used to provide a unique creation context for messages
-	// in batch sending scenarios.
 	OperationTypeCreate OperationTypeAttr = "create"
-	// OperationTypeSend is the one or more messages are provided for sending to an
-	// intermediary. If a single message is sent, the context of the "Send" span can
-	// be used as the creation context and no "Create" span needs to be created.
+
 	OperationTypeSend OperationTypeAttr = "send"
-	// OperationTypeReceive is the one or more messages are requested by a consumer.
-	// This operation refers to pull-based scenarios, where consumers explicitly
-	// call methods of messaging SDKs to receive messages.
+
 	OperationTypeReceive OperationTypeAttr = "receive"
-	// OperationTypeProcess is the one or more messages are processed by a consumer.
+
 	OperationTypeProcess OperationTypeAttr = "process"
-	// OperationTypeSettle is the one or more messages are settled.
+
 	OperationTypeSettle OperationTypeAttr = "settle"
 )
 
-// SystemAttr is an attribute conforming to the messaging.system semantic
-// conventions. It represents the messaging system as identified by the client
-// instrumentation.
 type SystemAttr string
 
 var (
-	// SystemActiveMQ is the apache ActiveMQ.
 	SystemActiveMQ SystemAttr = "activemq"
-	// SystemAWSSNS is the amazon Simple Notification Service (SNS).
+
 	SystemAWSSNS SystemAttr = "aws.sns"
-	// SystemAWSSQS is the amazon Simple Queue Service (SQS).
+
 	SystemAWSSQS SystemAttr = "aws_sqs"
-	// SystemEventGrid is the azure Event Grid.
+
 	SystemEventGrid SystemAttr = "eventgrid"
-	// SystemEventHubs is the azure Event Hubs.
+
 	SystemEventHubs SystemAttr = "eventhubs"
-	// SystemServiceBus is the azure Service Bus.
+
 	SystemServiceBus SystemAttr = "servicebus"
-	// SystemGCPPubSub is the google Cloud Pub/Sub.
+
 	SystemGCPPubSub SystemAttr = "gcp_pubsub"
-	// SystemJMS is the java Message Service.
+
 	SystemJMS SystemAttr = "jms"
-	// SystemKafka is the apache Kafka.
+
 	SystemKafka SystemAttr = "kafka"
-	// SystemRabbitMQ is the rabbitMQ.
+
 	SystemRabbitMQ SystemAttr = "rabbitmq"
-	// SystemRocketMQ is the apache RocketMQ.
+
 	SystemRocketMQ SystemAttr = "rocketmq"
-	// SystemPulsar is the apache Pulsar.
+
 	SystemPulsar SystemAttr = "pulsar"
 )
 
-// ClientConsumedMessages is an instrument used to record metric values
-// conforming to the "messaging.client.consumed.messages" semantic conventions.
-// It represents the number of messages that were delivered to the application.
 type ClientConsumedMessages struct {
 	metric.Int64Counter
 }
@@ -95,67 +64,25 @@ var newClientConsumedMessagesOpts = []metric.Int64CounterOption{
 	metric.WithUnit("{message}"),
 }
 
-// NewClientConsumedMessages returns a new ClientConsumedMessages instrument.
 func NewClientConsumedMessages(
 	m metric.Meter,
 	opt ...metric.Int64CounterOption,
 ) (ClientConsumedMessages, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientConsumedMessages{noop.Int64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientConsumedMessagesOpts
-	} else {
-		opt = append(opt, newClientConsumedMessagesOpts...)
-	}
-
-	i, err := m.Int64Counter(
-		"messaging.client.consumed.messages",
-		opt...,
-	)
-	if err != nil {
-		return ClientConsumedMessages{noop.Int64Counter{}}, err
-	}
-	return ClientConsumedMessages{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientConsumedMessages), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientConsumedMessages) Inst() metric.Int64Counter {
-	return m.Int64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientConsumedMessages) Name() string {
-	return "messaging.client.consumed.messages"
-}
+func (ClientConsumedMessages) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientConsumedMessages) Unit() string {
-	return "{message}"
-}
+func (ClientConsumedMessages) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientConsumedMessages) Description() string {
-	return "Number of messages that were delivered to the application."
-}
+func (ClientConsumedMessages) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The operationName is the the system-specific name of the messaging operation.
-//
-// The system is the the messaging system as identified by the client
-// instrumentation.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// Records the number of messages pulled from the broker or number of messages
-// dispatched to the application in push-based scenarios.
-// The metric SHOULD be reported once per message delivery. For example, if
-// receiving and processing operations are both instrumented for a single message
-// delivery, this counter is incremented when the message is received and not
-// reported when it is processed.
 func (m ClientConsumedMessages) Add(
 	ctx context.Context,
 	incr int64,
@@ -163,117 +90,55 @@ func (m ClientConsumedMessages) Add(
 	system SystemAttr,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Counter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Counter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("messaging.operation.name", operationName),
-			attribute.String("messaging.system", string(system)),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("messaging.operation.name", operationName),
-				attribute.String("messaging.system", string(system)),
-			)...,
-		),
-	)
-
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// Records the number of messages pulled from the broker or number of messages
-// dispatched to the application in push-based scenarios.
-// The metric SHOULD be reported once per message delivery. For example, if
-// receiving and processing operations are both instrumented for a single message
-// delivery, this counter is incremented when the message is received and not
-// reported when it is processed.
 func (m ClientConsumedMessages) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64Counter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientConsumedMessages) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrConsumerGroupName returns an optional attribute for the
-// "messaging.consumer.group.name" semantic convention. It represents the name of
-// the consumer group with which a consumer is associated.
 func (ClientConsumedMessages) AttrConsumerGroupName(val string) attribute.KeyValue {
-	return attribute.String("messaging.consumer.group.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ClientConsumedMessages) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationSubscriptionName returns an optional attribute for the
-// "messaging.destination.subscription.name" semantic convention. It represents
-// the name of the destination subscription from which a message is consumed.
 func (ClientConsumedMessages) AttrDestinationSubscriptionName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.subscription.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ClientConsumedMessages) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientConsumedMessages) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ClientConsumedMessages) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientConsumedMessages) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientConsumedMessagesObservable is an instrument used to record metric values
-// conforming to the "messaging.client.consumed.messages" semantic conventions.
-// It represents the number of messages that were delivered to the application.
 type ClientConsumedMessagesObservable struct {
 	metric.Int64ObservableCounter
 }
@@ -283,127 +148,75 @@ var newClientConsumedMessagesObservableOpts = []metric.Int64ObservableCounterOpt
 	metric.WithUnit("{message}"),
 }
 
-// NewClientConsumedMessagesObservable returns a new
-// ClientConsumedMessagesObservable instrument.
 func NewClientConsumedMessagesObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableCounterOption,
 ) (ClientConsumedMessagesObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientConsumedMessagesObservable{noop.Int64ObservableCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientConsumedMessagesObservableOpts
-	} else {
-		opt = append(opt, newClientConsumedMessagesObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableCounter(
-		"messaging.client.consumed.messages",
-		opt...,
-	)
-	if err != nil {
-		return ClientConsumedMessagesObservable{noop.Int64ObservableCounter{}}, err
-	}
-	return ClientConsumedMessagesObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientConsumedMessagesObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientConsumedMessagesObservable) Inst() metric.Int64ObservableCounter {
-	return m.Int64ObservableCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientConsumedMessagesObservable) Name() string {
-	return "messaging.client.consumed.messages"
-}
+func (ClientConsumedMessagesObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientConsumedMessagesObservable) Unit() string {
-	return "{message}"
-}
+func (ClientConsumedMessagesObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientConsumedMessagesObservable) Description() string {
-	return "Number of messages that were delivered to the application."
-}
+func (ClientConsumedMessagesObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrOperationName returns a required attribute for the
-// "messaging.operation.name" semantic convention. It represents the
-// system-specific name of the messaging operation.
 func (ClientConsumedMessagesObservable) AttrOperationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.operation.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrSystem returns a required attribute for the "messaging.system" semantic
-// convention. It represents the messaging system as identified by the client
-// instrumentation.
 func (ClientConsumedMessagesObservable) AttrSystem(val SystemAttr) attribute.KeyValue {
-	return attribute.String("messaging.system", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientConsumedMessagesObservable) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrConsumerGroupName returns an optional attribute for the
-// "messaging.consumer.group.name" semantic convention. It represents the name of
-// the consumer group with which a consumer is associated.
 func (ClientConsumedMessagesObservable) AttrConsumerGroupName(val string) attribute.KeyValue {
-	return attribute.String("messaging.consumer.group.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ClientConsumedMessagesObservable) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationSubscriptionName returns an optional attribute for the
-// "messaging.destination.subscription.name" semantic convention. It represents
-// the name of the destination subscription from which a message is consumed.
 func (ClientConsumedMessagesObservable) AttrDestinationSubscriptionName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.subscription.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ClientConsumedMessagesObservable) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientConsumedMessagesObservable) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ClientConsumedMessagesObservable) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientConsumedMessagesObservable) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientOperationDuration is an instrument used to record metric values
-// conforming to the "messaging.client.operation.duration" semantic conventions.
-// It represents the duration of messaging operation initiated by a producer or
-// consumer client.
 type ClientOperationDuration struct {
 	metric.Float64Histogram
 }
@@ -413,63 +226,25 @@ var newClientOperationDurationOpts = []metric.Float64HistogramOption{
 	metric.WithUnit("s"),
 }
 
-// NewClientOperationDuration returns a new ClientOperationDuration instrument.
 func NewClientOperationDuration(
 	m metric.Meter,
 	opt ...metric.Float64HistogramOption,
 ) (ClientOperationDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientOperationDuration{noop.Float64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientOperationDurationOpts
-	} else {
-		opt = append(opt, newClientOperationDurationOpts...)
-	}
-
-	i, err := m.Float64Histogram(
-		"messaging.client.operation.duration",
-		opt...,
-	)
-	if err != nil {
-		return ClientOperationDuration{noop.Float64Histogram{}}, err
-	}
-	return ClientOperationDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientOperationDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientOperationDuration) Inst() metric.Float64Histogram {
-	return m.Float64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientOperationDuration) Name() string {
-	return "messaging.client.operation.duration"
-}
+func (ClientOperationDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientOperationDuration) Unit() string {
-	return "s"
-}
+func (ClientOperationDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientOperationDuration) Description() string {
-	return "Duration of messaging operation initiated by a producer or consumer client."
-}
+func (ClientOperationDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The operationName is the the system-specific name of the messaging operation.
-//
-// The system is the the messaging system as identified by the client
-// instrumentation.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// This metric SHOULD NOT be used to report processing duration - processing
-// duration is reported in `messaging.process.duration` metric.
 func (m ClientOperationDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -477,120 +252,60 @@ func (m ClientOperationDuration) Record(
 	system SystemAttr,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("messaging.operation.name", operationName),
-			attribute.String("messaging.system", string(system)),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("messaging.operation.name", operationName),
-				attribute.String("messaging.system", string(system)),
-			)...,
-		),
-	)
-
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// This metric SHOULD NOT be used to report processing duration - processing
-// duration is reported in `messaging.process.duration` metric.
 func (m ClientOperationDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientOperationDuration) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrConsumerGroupName returns an optional attribute for the
-// "messaging.consumer.group.name" semantic convention. It represents the name of
-// the consumer group with which a consumer is associated.
 func (ClientOperationDuration) AttrConsumerGroupName(val string) attribute.KeyValue {
-	return attribute.String("messaging.consumer.group.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ClientOperationDuration) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationSubscriptionName returns an optional attribute for the
-// "messaging.destination.subscription.name" semantic convention. It represents
-// the name of the destination subscription from which a message is consumed.
 func (ClientOperationDuration) AttrDestinationSubscriptionName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.subscription.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ClientOperationDuration) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOperationType returns an optional attribute for the
-// "messaging.operation.type" semantic convention. It represents a string
-// identifying the type of the messaging operation.
 func (ClientOperationDuration) AttrOperationType(val OperationTypeAttr) attribute.KeyValue {
-	return attribute.String("messaging.operation.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientOperationDuration) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ClientOperationDuration) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientOperationDuration) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientSentMessages is an instrument used to record metric values conforming to
-// the "messaging.client.sent.messages" semantic conventions. It represents the
-// number of messages producer attempted to send to the broker.
 type ClientSentMessages struct {
 	metric.Int64Counter
 }
@@ -600,63 +315,25 @@ var newClientSentMessagesOpts = []metric.Int64CounterOption{
 	metric.WithUnit("{message}"),
 }
 
-// NewClientSentMessages returns a new ClientSentMessages instrument.
 func NewClientSentMessages(
 	m metric.Meter,
 	opt ...metric.Int64CounterOption,
 ) (ClientSentMessages, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientSentMessages{noop.Int64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientSentMessagesOpts
-	} else {
-		opt = append(opt, newClientSentMessagesOpts...)
-	}
-
-	i, err := m.Int64Counter(
-		"messaging.client.sent.messages",
-		opt...,
-	)
-	if err != nil {
-		return ClientSentMessages{noop.Int64Counter{}}, err
-	}
-	return ClientSentMessages{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientSentMessages), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientSentMessages) Inst() metric.Int64Counter {
-	return m.Int64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientSentMessages) Name() string {
-	return "messaging.client.sent.messages"
-}
+func (ClientSentMessages) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientSentMessages) Unit() string {
-	return "{message}"
-}
+func (ClientSentMessages) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientSentMessages) Description() string {
-	return "Number of messages producer attempted to send to the broker."
-}
+func (ClientSentMessages) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The operationName is the the system-specific name of the messaging operation.
-//
-// The system is the the messaging system as identified by the client
-// instrumentation.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// This metric MUST NOT count messages that were created but haven't yet been
-// sent.
 func (m ClientSentMessages) Add(
 	ctx context.Context,
 	incr int64,
@@ -664,99 +341,45 @@ func (m ClientSentMessages) Add(
 	system SystemAttr,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Counter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Counter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("messaging.operation.name", operationName),
-			attribute.String("messaging.system", string(system)),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("messaging.operation.name", operationName),
-				attribute.String("messaging.system", string(system)),
-			)...,
-		),
-	)
-
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// This metric MUST NOT count messages that were created but haven't yet been
-// sent.
 func (m ClientSentMessages) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64Counter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientSentMessages) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ClientSentMessages) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ClientSentMessages) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientSentMessages) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ClientSentMessages) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientSentMessages) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientSentMessagesObservable is an instrument used to record metric values
-// conforming to the "messaging.client.sent.messages" semantic conventions. It
-// represents the number of messages producer attempted to send to the broker.
 type ClientSentMessagesObservable struct {
 	metric.Int64ObservableCounter
 }
@@ -766,112 +389,65 @@ var newClientSentMessagesObservableOpts = []metric.Int64ObservableCounterOption{
 	metric.WithUnit("{message}"),
 }
 
-// NewClientSentMessagesObservable returns a new ClientSentMessagesObservable
-// instrument.
 func NewClientSentMessagesObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableCounterOption,
 ) (ClientSentMessagesObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientSentMessagesObservable{noop.Int64ObservableCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientSentMessagesObservableOpts
-	} else {
-		opt = append(opt, newClientSentMessagesObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableCounter(
-		"messaging.client.sent.messages",
-		opt...,
-	)
-	if err != nil {
-		return ClientSentMessagesObservable{noop.Int64ObservableCounter{}}, err
-	}
-	return ClientSentMessagesObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientSentMessagesObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientSentMessagesObservable) Inst() metric.Int64ObservableCounter {
-	return m.Int64ObservableCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientSentMessagesObservable) Name() string {
-	return "messaging.client.sent.messages"
-}
+func (ClientSentMessagesObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientSentMessagesObservable) Unit() string {
-	return "{message}"
-}
+func (ClientSentMessagesObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientSentMessagesObservable) Description() string {
-	return "Number of messages producer attempted to send to the broker."
-}
+func (ClientSentMessagesObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrOperationName returns a required attribute for the
-// "messaging.operation.name" semantic convention. It represents the
-// system-specific name of the messaging operation.
 func (ClientSentMessagesObservable) AttrOperationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.operation.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrSystem returns a required attribute for the "messaging.system" semantic
-// convention. It represents the messaging system as identified by the client
-// instrumentation.
 func (ClientSentMessagesObservable) AttrSystem(val SystemAttr) attribute.KeyValue {
-	return attribute.String("messaging.system", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientSentMessagesObservable) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ClientSentMessagesObservable) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ClientSentMessagesObservable) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientSentMessagesObservable) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ClientSentMessagesObservable) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientSentMessagesObservable) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ProcessDuration is an instrument used to record metric values conforming to
-// the "messaging.process.duration" semantic conventions. It represents the
-// duration of processing operation.
 type ProcessDuration struct {
 	metric.Float64Histogram
 }
@@ -881,63 +457,25 @@ var newProcessDurationOpts = []metric.Float64HistogramOption{
 	metric.WithUnit("s"),
 }
 
-// NewProcessDuration returns a new ProcessDuration instrument.
 func NewProcessDuration(
 	m metric.Meter,
 	opt ...metric.Float64HistogramOption,
 ) (ProcessDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ProcessDuration{noop.Float64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newProcessDurationOpts
-	} else {
-		opt = append(opt, newProcessDurationOpts...)
-	}
-
-	i, err := m.Float64Histogram(
-		"messaging.process.duration",
-		opt...,
-	)
-	if err != nil {
-		return ProcessDuration{noop.Float64Histogram{}}, err
-	}
-	return ProcessDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ProcessDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ProcessDuration) Inst() metric.Float64Histogram {
-	return m.Float64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ProcessDuration) Name() string {
-	return "messaging.process.duration"
-}
+func (ProcessDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ProcessDuration) Unit() string {
-	return "s"
-}
+func (ProcessDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ProcessDuration) Description() string {
-	return "Duration of processing operation."
-}
+func (ProcessDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The operationName is the the system-specific name of the messaging operation.
-//
-// The system is the the messaging system as identified by the client
-// instrumentation.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// This metric MUST be reported for operations with `messaging.operation.type`
-// that matches `process`.
 func (m ProcessDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -945,106 +483,51 @@ func (m ProcessDuration) Record(
 	system SystemAttr,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("messaging.operation.name", operationName),
-			attribute.String("messaging.system", string(system)),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("messaging.operation.name", operationName),
-				attribute.String("messaging.system", string(system)),
-			)...,
-		),
-	)
-
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// This metric MUST be reported for operations with `messaging.operation.type`
-// that matches `process`.
 func (m ProcessDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ProcessDuration) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrConsumerGroupName returns an optional attribute for the
-// "messaging.consumer.group.name" semantic convention. It represents the name of
-// the consumer group with which a consumer is associated.
 func (ProcessDuration) AttrConsumerGroupName(val string) attribute.KeyValue {
-	return attribute.String("messaging.consumer.group.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationName returns an optional attribute for the
-// "messaging.destination.name" semantic convention. It represents the message
-// destination name.
 func (ProcessDuration) AttrDestinationName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationSubscriptionName returns an optional attribute for the
-// "messaging.destination.subscription.name" semantic convention. It represents
-// the name of the destination subscription from which a message is consumed.
 func (ProcessDuration) AttrDestinationSubscriptionName(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.subscription.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationTemplate returns an optional attribute for the
-// "messaging.destination.template" semantic convention. It represents the low
-// cardinality representation of the messaging destination name.
 func (ProcessDuration) AttrDestinationTemplate(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ProcessDuration) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrDestinationPartitionID returns an optional attribute for the
-// "messaging.destination.partition.id" semantic convention. It represents the
-// identifier of the partition messages are sent to or received from, unique
-// within the `messaging.destination.name`.
 func (ProcessDuration) AttrDestinationPartitionID(val string) attribute.KeyValue {
-	return attribute.String("messaging.destination.partition.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ProcessDuration) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }

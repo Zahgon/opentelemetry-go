@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package tracetest
 
 import (
@@ -13,37 +10,15 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// SpanStubs is a slice of SpanStub use for testing an SDK.
 type SpanStubs []SpanStub
 
-// SpanStubsFromReadOnlySpans returns SpanStubs populated from ro.
 func SpanStubsFromReadOnlySpans(ro []tracesdk.ReadOnlySpan) SpanStubs {
-	if len(ro) == 0 {
-		return nil
-	}
-
-	s := make(SpanStubs, 0, len(ro))
-	for _, r := range ro {
-		s = append(s, SpanStubFromReadOnlySpan(r))
-	}
-
-	return s
+	_ = "STUB: not implemented"
+	return *new(SpanStubs)
 }
 
-// Snapshots returns s as a slice of ReadOnlySpans.
-func (s SpanStubs) Snapshots() []tracesdk.ReadOnlySpan {
-	if len(s) == 0 {
-		return nil
-	}
+func (s SpanStubs) Snapshots() []tracesdk.ReadOnlySpan { _ = "STUB: not implemented"; return nil }
 
-	ro := make([]tracesdk.ReadOnlySpan, len(s))
-	for i := range s {
-		ro[i] = s[i].Snapshot()
-	}
-	return ro
-}
-
-// SpanStub is a stand-in for a Span.
 type SpanStub struct {
 	Name                 string
 	SpanContext          trace.SpanContext
@@ -62,66 +37,20 @@ type SpanStub struct {
 	Resource             *resource.Resource
 	InstrumentationScope instrumentation.Scope
 
-	// Deprecated: use InstrumentationScope instead.
 	InstrumentationLibrary instrumentation.Library //nolint:staticcheck // This method needs to be define for backwards compatibility
 }
 
-// SpanStubFromReadOnlySpan returns a SpanStub populated from ro.
 func SpanStubFromReadOnlySpan(ro tracesdk.ReadOnlySpan) SpanStub {
-	if ro == nil {
-		return SpanStub{}
-	}
-
-	return SpanStub{
-		Name:                   ro.Name(),
-		SpanContext:            ro.SpanContext(),
-		Parent:                 ro.Parent(),
-		SpanKind:               ro.SpanKind(),
-		StartTime:              ro.StartTime(),
-		EndTime:                ro.EndTime(),
-		Attributes:             ro.Attributes(),
-		Events:                 ro.Events(),
-		Links:                  ro.Links(),
-		Status:                 ro.Status(),
-		DroppedAttributes:      ro.DroppedAttributes(),
-		DroppedEvents:          ro.DroppedEvents(),
-		DroppedLinks:           ro.DroppedLinks(),
-		ChildSpanCount:         ro.ChildSpanCount(),
-		Resource:               ro.Resource(),
-		InstrumentationScope:   ro.InstrumentationScope(),
-		InstrumentationLibrary: ro.InstrumentationScope(),
-	}
+	_ = "STUB: not implemented"
+	return *new(SpanStub)
 }
 
-// Snapshot returns a read-only copy of the SpanStub.
 func (s SpanStub) Snapshot() tracesdk.ReadOnlySpan {
-	scopeOrLibrary := s.InstrumentationScope
-	if scopeOrLibrary.Name == "" && scopeOrLibrary.Version == "" && scopeOrLibrary.SchemaURL == "" {
-		scopeOrLibrary = s.InstrumentationLibrary
-	}
-
-	return spanSnapshot{
-		name:                 s.Name,
-		spanContext:          s.SpanContext,
-		parent:               s.Parent,
-		spanKind:             s.SpanKind,
-		startTime:            s.StartTime,
-		endTime:              s.EndTime,
-		attributes:           s.Attributes,
-		events:               s.Events,
-		links:                s.Links,
-		status:               s.Status,
-		droppedAttributes:    s.DroppedAttributes,
-		droppedEvents:        s.DroppedEvents,
-		droppedLinks:         s.DroppedLinks,
-		childSpanCount:       s.ChildSpanCount,
-		resource:             s.Resource,
-		instrumentationScope: scopeOrLibrary,
-	}
+	_ = "STUB: not implemented"
+	return *new(tracesdk.ReadOnlySpan)
 }
 
 type spanSnapshot struct {
-	// Embed the interface to implement the private method.
 	tracesdk.ReadOnlySpan
 
 	name                 string
@@ -142,25 +71,39 @@ type spanSnapshot struct {
 	instrumentationScope instrumentation.Scope
 }
 
-func (s spanSnapshot) Name() string                     { return s.name }
-func (s spanSnapshot) SpanContext() trace.SpanContext   { return s.spanContext }
-func (s spanSnapshot) Parent() trace.SpanContext        { return s.parent }
-func (s spanSnapshot) SpanKind() trace.SpanKind         { return s.spanKind }
-func (s spanSnapshot) StartTime() time.Time             { return s.startTime }
-func (s spanSnapshot) EndTime() time.Time               { return s.endTime }
-func (s spanSnapshot) Attributes() []attribute.KeyValue { return s.attributes }
-func (s spanSnapshot) Links() []tracesdk.Link           { return s.links }
-func (s spanSnapshot) Events() []tracesdk.Event         { return s.events }
-func (s spanSnapshot) Status() tracesdk.Status          { return s.status }
-func (s spanSnapshot) DroppedAttributes() int           { return s.droppedAttributes }
-func (s spanSnapshot) DroppedLinks() int                { return s.droppedLinks }
-func (s spanSnapshot) DroppedEvents() int               { return s.droppedEvents }
-func (s spanSnapshot) ChildSpanCount() int              { return s.childSpanCount }
-func (s spanSnapshot) Resource() *resource.Resource     { return s.resource }
+func (s spanSnapshot) Name() string { _ = "STUB: not implemented"; return "" }
+func (s spanSnapshot) SpanContext() trace.SpanContext {
+	_ = "STUB: not implemented"
+	return *new(trace.SpanContext)
+}
+func (s spanSnapshot) Parent() trace.SpanContext {
+	_ = "STUB: not implemented"
+	return *new(trace.SpanContext)
+}
+func (s spanSnapshot) SpanKind() trace.SpanKind {
+	_ = "STUB: not implemented"
+	return *new(trace.SpanKind)
+}
+func (s spanSnapshot) StartTime() time.Time             { _ = "STUB: not implemented"; return *new(time.Time) }
+func (s spanSnapshot) EndTime() time.Time               { _ = "STUB: not implemented"; return *new(time.Time) }
+func (s spanSnapshot) Attributes() []attribute.KeyValue { _ = "STUB: not implemented"; return nil }
+func (s spanSnapshot) Links() []tracesdk.Link           { _ = "STUB: not implemented"; return nil }
+func (s spanSnapshot) Events() []tracesdk.Event         { _ = "STUB: not implemented"; return nil }
+func (s spanSnapshot) Status() tracesdk.Status {
+	_ = "STUB: not implemented"
+	return *new(tracesdk.Status)
+}
+func (s spanSnapshot) DroppedAttributes() int       { _ = "STUB: not implemented"; return 0 }
+func (s spanSnapshot) DroppedLinks() int            { _ = "STUB: not implemented"; return 0 }
+func (s spanSnapshot) DroppedEvents() int           { _ = "STUB: not implemented"; return 0 }
+func (s spanSnapshot) ChildSpanCount() int          { _ = "STUB: not implemented"; return 0 }
+func (s spanSnapshot) Resource() *resource.Resource { _ = "STUB: not implemented"; return nil }
 func (s spanSnapshot) InstrumentationScope() instrumentation.Scope {
-	return s.instrumentationScope
+	_ = "STUB: not implemented"
+	return *new(instrumentation.Scope)
 }
 
-func (s spanSnapshot) InstrumentationLibrary() instrumentation.Library { //nolint:staticcheck // This method needs to be define for backwards compatibility
-	return s.instrumentationScope
+func (s spanSnapshot) InstrumentationLibrary() instrumentation.Library {
+	_ = "STUB: not implemented" //nolint:staticcheck // This method needs to be define for backwards compatibility
+	return *new(instrumentation.Library)
 }

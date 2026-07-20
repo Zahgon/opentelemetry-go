@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package tracetest
 
 import (
@@ -10,7 +7,6 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
-// SpanRecorder records started and ended spans.
 type SpanRecorder struct {
 	startedMu sync.RWMutex
 	started   []sdktrace.ReadWriteSpan
@@ -21,74 +17,21 @@ type SpanRecorder struct {
 
 var _ sdktrace.SpanProcessor = (*SpanRecorder)(nil)
 
-// NewSpanRecorder returns a new initialized SpanRecorder.
-func NewSpanRecorder() *SpanRecorder {
-	return new(SpanRecorder)
-}
+func NewSpanRecorder() *SpanRecorder { _ = "STUB: not implemented"; return nil }
 
-// OnStart records started spans.
-//
-// This method is safe to be called concurrently.
 func (sr *SpanRecorder) OnStart(_ context.Context, s sdktrace.ReadWriteSpan) {
-	sr.startedMu.Lock()
-	defer sr.startedMu.Unlock()
-	sr.started = append(sr.started, s)
+	_ = "STUB: not implemented"
+	return
 }
 
-// OnEnd records completed spans.
-//
-// This method is safe to be called concurrently.
-func (sr *SpanRecorder) OnEnd(s sdktrace.ReadOnlySpan) {
-	sr.endedMu.Lock()
-	defer sr.endedMu.Unlock()
-	sr.ended = append(sr.ended, s)
-}
+func (sr *SpanRecorder) OnEnd(s sdktrace.ReadOnlySpan) { _ = "STUB: not implemented"; return }
 
-// Shutdown does nothing.
-//
-// This method is safe to be called concurrently.
-func (*SpanRecorder) Shutdown(context.Context) error {
-	return nil
-}
+func (*SpanRecorder) Shutdown(context.Context) error { _ = "STUB: not implemented"; return nil }
 
-// ForceFlush does nothing.
-//
-// This method is safe to be called concurrently.
-func (*SpanRecorder) ForceFlush(context.Context) error {
-	return nil
-}
+func (*SpanRecorder) ForceFlush(context.Context) error { _ = "STUB: not implemented"; return nil }
 
-// Started returns a copy of all started spans that have been recorded.
-//
-// This method is safe to be called concurrently.
-func (sr *SpanRecorder) Started() []sdktrace.ReadWriteSpan {
-	sr.startedMu.RLock()
-	defer sr.startedMu.RUnlock()
-	dst := make([]sdktrace.ReadWriteSpan, len(sr.started))
-	copy(dst, sr.started)
-	return dst
-}
+func (sr *SpanRecorder) Started() []sdktrace.ReadWriteSpan { _ = "STUB: not implemented"; return nil }
 
-// Reset clears the recorded spans.
-//
-// This method is safe to be called concurrently.
-func (sr *SpanRecorder) Reset() {
-	sr.startedMu.Lock()
-	sr.endedMu.Lock()
-	defer sr.startedMu.Unlock()
-	defer sr.endedMu.Unlock()
+func (sr *SpanRecorder) Reset() { _ = "STUB: not implemented"; return }
 
-	sr.started = nil
-	sr.ended = nil
-}
-
-// Ended returns a copy of all ended spans that have been recorded.
-//
-// This method is safe to be called concurrently.
-func (sr *SpanRecorder) Ended() []sdktrace.ReadOnlySpan {
-	sr.endedMu.RLock()
-	defer sr.endedMu.RUnlock()
-	dst := make([]sdktrace.ReadOnlySpan, len(sr.ended))
-	copy(dst, sr.ended)
-	return dst
-}
+func (sr *SpanRecorder) Ended() []sdktrace.ReadOnlySpan { _ = "STUB: not implemented"; return nil }

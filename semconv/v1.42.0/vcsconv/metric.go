@@ -1,10 +1,3 @@
-// Code generated from semantic convention specification. DO NOT EDIT.
-
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package vcsconv provides types and functionality for OpenTelemetry semantic
-// conventions in the "vcs" namespace.
 package vcsconv
 
 import (
@@ -12,138 +5,72 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/noop"
-	"go.opentelemetry.io/otel/semconv/internal/metricpool"
 )
 
-// ChangeStateAttr is an attribute conforming to the vcs.change.state semantic
-// conventions. It represents the state of the change (pull request/merge
-// request/changelist).
 type ChangeStateAttr string
 
 var (
-	// ChangeStateOpen is the open means the change is currently active and under
-	// review. It hasn't been merged into the target branch yet, and it's still
-	// possible to make changes or add comments.
 	ChangeStateOpen ChangeStateAttr = "open"
-	// ChangeStateWip is the WIP (work-in-progress, draft) means the change is still
-	// in progress and not yet ready for a full review. It might still undergo
-	// significant changes.
+
 	ChangeStateWip ChangeStateAttr = "wip"
-	// ChangeStateClosed is the closed means the merge request has been closed
-	// without merging. This can happen for various reasons, such as the changes
-	// being deemed unnecessary, the issue being resolved in another way, or the
-	// author deciding to withdraw the request.
+
 	ChangeStateClosed ChangeStateAttr = "closed"
-	// ChangeStateMerged is the merged indicates that the change has been
-	// successfully integrated into the target codebase.
+
 	ChangeStateMerged ChangeStateAttr = "merged"
 )
 
-// LineChangeTypeAttr is an attribute conforming to the vcs.line_change.type
-// semantic conventions. It represents the type of line change being measured on
-// a branch or change.
 type LineChangeTypeAttr string
 
 var (
-	// LineChangeTypeAdded is the how many lines were added.
 	LineChangeTypeAdded LineChangeTypeAttr = "added"
-	// LineChangeTypeRemoved is the how many lines were removed.
+
 	LineChangeTypeRemoved LineChangeTypeAttr = "removed"
 )
 
-// ProviderNameAttr is an attribute conforming to the vcs.provider.name semantic
-// conventions. It represents the name of the version control system provider.
 type ProviderNameAttr string
 
 var (
-	// ProviderNameGithub is the [GitHub].
-	//
-	// [GitHub]: https://github.com
 	ProviderNameGithub ProviderNameAttr = "github"
-	// ProviderNameGitlab is the [GitLab].
-	//
-	// [GitLab]: https://gitlab.com
+
 	ProviderNameGitlab ProviderNameAttr = "gitlab"
-	// ProviderNameGitea is the [Gitea].
-	//
-	// [Gitea]: https://gitea.io
+
 	ProviderNameGitea ProviderNameAttr = "gitea"
-	// ProviderNameBitbucket is the [Bitbucket].
-	//
-	// [Bitbucket]: https://bitbucket.org
+
 	ProviderNameBitbucket ProviderNameAttr = "bitbucket"
 )
 
-// RefBaseTypeAttr is an attribute conforming to the vcs.ref.base.type semantic
-// conventions. It represents the type of the [reference] in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 type RefBaseTypeAttr string
 
 var (
-	// RefBaseTypeBranch is the [branch].
-	//
-	// [branch]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefbranchabranch
 	RefBaseTypeBranch RefBaseTypeAttr = "branch"
-	// RefBaseTypeTag is the [tag].
-	//
-	// [tag]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddeftagatag
+
 	RefBaseTypeTag RefBaseTypeAttr = "tag"
 )
 
-// RefHeadTypeAttr is an attribute conforming to the vcs.ref.head.type semantic
-// conventions. It represents the type of the [reference] in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 type RefHeadTypeAttr string
 
 var (
-	// RefHeadTypeBranch is the [branch].
-	//
-	// [branch]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefbranchabranch
 	RefHeadTypeBranch RefHeadTypeAttr = "branch"
-	// RefHeadTypeTag is the [tag].
-	//
-	// [tag]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddeftagatag
+
 	RefHeadTypeTag RefHeadTypeAttr = "tag"
 )
 
-// RefTypeAttr is an attribute conforming to the vcs.ref.type semantic
-// conventions. It represents the type of the [reference] in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 type RefTypeAttr string
 
 var (
-	// RefTypeBranch is the [branch].
-	//
-	// [branch]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefbranchabranch
 	RefTypeBranch RefTypeAttr = "branch"
-	// RefTypeTag is the [tag].
-	//
-	// [tag]: https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddeftagatag
+
 	RefTypeTag RefTypeAttr = "tag"
 )
 
-// RevisionDeltaDirectionAttr is an attribute conforming to the
-// vcs.revision_delta.direction semantic conventions. It represents the type of
-// revision comparison.
 type RevisionDeltaDirectionAttr string
 
 var (
-	// RevisionDeltaDirectionBehind is the how many revisions the change is behind
-	// the target ref.
 	RevisionDeltaDirectionBehind RevisionDeltaDirectionAttr = "behind"
-	// RevisionDeltaDirectionAhead is the how many revisions the change is ahead of
-	// the target ref.
+
 	RevisionDeltaDirectionAhead RevisionDeltaDirectionAttr = "ahead"
 )
 
-// ChangeCount is an instrument used to record metric values conforming to the
-// "vcs.change.count" semantic conventions. It represents the number of changes
-// (pull requests/merge requests/changelists) in a repository, categorized by
-// their state (e.g. open or merged).
 type ChangeCount struct {
 	metric.Int64UpDownCounter
 }
@@ -153,64 +80,25 @@ var newChangeCountOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{change}"),
 }
 
-// NewChangeCount returns a new ChangeCount instrument.
 func NewChangeCount(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (ChangeCount, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeCount{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeCountOpts
-	} else {
-		opt = append(opt, newChangeCountOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"vcs.change.count",
-		opt...,
-	)
-	if err != nil {
-		return ChangeCount{noop.Int64UpDownCounter{}}, err
-	}
-	return ChangeCount{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeCount), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeCount) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeCount) Name() string {
-	return "vcs.change.count"
-}
+func (ChangeCount) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeCount) Unit() string {
-	return "{change}"
-}
+func (ChangeCount) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeCount) Description() string {
-	return "The number of changes (pull requests/merge requests/changelists) in a repository, categorized by their state (e.g. open or merged)."
-}
+func (ChangeCount) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The changeState is the the state of the change (pull request/merge
-// request/changelist).
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m ChangeCount) Add(
 	ctx context.Context,
 	incr int64,
@@ -218,76 +106,30 @@ func (m ChangeCount) Add(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("vcs.change.state", string(changeState)),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.change.state", string(changeState)),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m ChangeCount) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeCount) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeCount) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeCount) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeCountObservable is an instrument used to record metric values conforming
-// to the "vcs.change.count" semantic conventions. It represents the number of
-// changes (pull requests/merge requests/changelists) in a repository,
-// categorized by their state (e.g. open or merged).
 type ChangeCountObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -297,93 +139,50 @@ var newChangeCountObservableOpts = []metric.Int64ObservableUpDownCounterOption{
 	metric.WithUnit("{change}"),
 }
 
-// NewChangeCountObservable returns a new ChangeCountObservable instrument.
 func NewChangeCountObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (ChangeCountObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeCountObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeCountObservableOpts
-	} else {
-		opt = append(opt, newChangeCountObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"vcs.change.count",
-		opt...,
-	)
-	if err != nil {
-		return ChangeCountObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return ChangeCountObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeCountObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeCountObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeCountObservable) Name() string {
-	return "vcs.change.count"
-}
+func (ChangeCountObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeCountObservable) Unit() string {
-	return "{change}"
-}
+func (ChangeCountObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeCountObservable) Description() string {
-	return "The number of changes (pull requests/merge requests/changelists) in a repository, categorized by their state (e.g. open or merged)."
-}
+func (ChangeCountObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrChangeState returns a required attribute for the "vcs.change.state"
-// semantic convention. It represents the state of the change (pull request/merge
-// request/changelist).
 func (ChangeCountObservable) AttrChangeState(val ChangeStateAttr) attribute.KeyValue {
-	return attribute.String("vcs.change.state", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (ChangeCountObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeCountObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeCountObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeCountObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeDuration is an instrument used to record metric values conforming to the
-// "vcs.change.duration" semantic conventions. It represents the time duration a
-// change (pull request/merge request/changelist) has been in a given state.
 type ChangeDuration struct {
 	metric.Float64Gauge
 }
@@ -393,68 +192,25 @@ var newChangeDurationOpts = []metric.Float64GaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewChangeDuration returns a new ChangeDuration instrument.
 func NewChangeDuration(
 	m metric.Meter,
 	opt ...metric.Float64GaugeOption,
 ) (ChangeDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeDuration{noop.Float64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeDurationOpts
-	} else {
-		opt = append(opt, newChangeDurationOpts...)
-	}
-
-	i, err := m.Float64Gauge(
-		"vcs.change.duration",
-		opt...,
-	)
-	if err != nil {
-		return ChangeDuration{noop.Float64Gauge{}}, err
-	}
-	return ChangeDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeDuration) Inst() metric.Float64Gauge {
-	return m.Float64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeDuration) Name() string {
-	return "vcs.change.duration"
-}
+func (ChangeDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeDuration) Unit() string {
-	return "s"
-}
+func (ChangeDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeDuration) Description() string {
-	return "The time duration a change (pull request/merge request/changelist) has been in a given state."
-}
+func (ChangeDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The changeState is the the state of the change (pull request/merge
-// request/changelist).
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m ChangeDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -463,78 +219,30 @@ func (m ChangeDuration) Record(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.change.state", string(changeState)),
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.change.state", string(changeState)),
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ChangeDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeDuration) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeDuration) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeDuration) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeDurationObservable is an instrument used to record metric values
-// conforming to the "vcs.change.duration" semantic conventions. It represents
-// the time duration a change (pull request/merge request/changelist) has been in
-// a given state.
 type ChangeDurationObservable struct {
 	metric.Float64ObservableGauge
 }
@@ -544,103 +252,55 @@ var newChangeDurationObservableOpts = []metric.Float64ObservableGaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewChangeDurationObservable returns a new ChangeDurationObservable instrument.
 func NewChangeDurationObservable(
 	m metric.Meter,
 	opt ...metric.Float64ObservableGaugeOption,
 ) (ChangeDurationObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeDurationObservable{noop.Float64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeDurationObservableOpts
-	} else {
-		opt = append(opt, newChangeDurationObservableOpts...)
-	}
-
-	i, err := m.Float64ObservableGauge(
-		"vcs.change.duration",
-		opt...,
-	)
-	if err != nil {
-		return ChangeDurationObservable{noop.Float64ObservableGauge{}}, err
-	}
-	return ChangeDurationObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeDurationObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeDurationObservable) Inst() metric.Float64ObservableGauge {
-	return m.Float64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeDurationObservable) Name() string {
-	return "vcs.change.duration"
-}
+func (ChangeDurationObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeDurationObservable) Unit() string {
-	return "s"
-}
+func (ChangeDurationObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeDurationObservable) Description() string {
-	return "The time duration a change (pull request/merge request/changelist) has been in a given state."
-}
+func (ChangeDurationObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrChangeState returns a required attribute for the "vcs.change.state"
-// semantic convention. It represents the state of the change (pull request/merge
-// request/changelist).
 func (ChangeDurationObservable) AttrChangeState(val ChangeStateAttr) attribute.KeyValue {
-	return attribute.String("vcs.change.state", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeDurationObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (ChangeDurationObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeDurationObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeDurationObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeDurationObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeTimeToApproval is an instrument used to record metric values conforming
-// to the "vcs.change.time_to_approval" semantic conventions. It represents the
-// amount of time since its creation it took a change (pull request/merge
-// request/changelist) to get the first approval.
 type ChangeTimeToApproval struct {
 	metric.Float64Gauge
 }
@@ -650,65 +310,25 @@ var newChangeTimeToApprovalOpts = []metric.Float64GaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewChangeTimeToApproval returns a new ChangeTimeToApproval instrument.
 func NewChangeTimeToApproval(
 	m metric.Meter,
 	opt ...metric.Float64GaugeOption,
 ) (ChangeTimeToApproval, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeTimeToApproval{noop.Float64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeTimeToApprovalOpts
-	} else {
-		opt = append(opt, newChangeTimeToApprovalOpts...)
-	}
-
-	i, err := m.Float64Gauge(
-		"vcs.change.time_to_approval",
-		opt...,
-	)
-	if err != nil {
-		return ChangeTimeToApproval{noop.Float64Gauge{}}, err
-	}
-	return ChangeTimeToApproval{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeTimeToApproval), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeTimeToApproval) Inst() metric.Float64Gauge {
-	return m.Float64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeTimeToApproval) Name() string {
-	return "vcs.change.time_to_approval"
-}
+func (ChangeTimeToApproval) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeTimeToApproval) Unit() string {
-	return "s"
-}
+func (ChangeTimeToApproval) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeTimeToApproval) Description() string {
-	return "The amount of time since its creation it took a change (pull request/merge request/changelist) to get the first approval."
-}
+func (ChangeTimeToApproval) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m ChangeTimeToApproval) Record(
 	ctx context.Context,
 	val float64,
@@ -716,105 +336,45 @@ func (m ChangeTimeToApproval) Record(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ChangeTimeToApproval) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeTimeToApproval) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseName returns an optional attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToApproval) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeTimeToApproval) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeTimeToApproval) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseRevision returns an optional attribute for the
-// "vcs.ref.base.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToApproval) AttrRefBaseRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadRevision returns an optional attribute for the
-// "vcs.ref.head.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToApproval) AttrRefHeadRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeTimeToApprovalObservable is an instrument used to record metric values
-// conforming to the "vcs.change.time_to_approval" semantic conventions. It
-// represents the amount of time since its creation it took a change (pull
-// request/merge request/changelist) to get the first approval.
 type ChangeTimeToApprovalObservable struct {
 	metric.Float64ObservableGauge
 }
@@ -824,126 +384,65 @@ var newChangeTimeToApprovalObservableOpts = []metric.Float64ObservableGaugeOptio
 	metric.WithUnit("s"),
 }
 
-// NewChangeTimeToApprovalObservable returns a new ChangeTimeToApprovalObservable
-// instrument.
 func NewChangeTimeToApprovalObservable(
 	m metric.Meter,
 	opt ...metric.Float64ObservableGaugeOption,
 ) (ChangeTimeToApprovalObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeTimeToApprovalObservable{noop.Float64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeTimeToApprovalObservableOpts
-	} else {
-		opt = append(opt, newChangeTimeToApprovalObservableOpts...)
-	}
-
-	i, err := m.Float64ObservableGauge(
-		"vcs.change.time_to_approval",
-		opt...,
-	)
-	if err != nil {
-		return ChangeTimeToApprovalObservable{noop.Float64ObservableGauge{}}, err
-	}
-	return ChangeTimeToApprovalObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeTimeToApprovalObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeTimeToApprovalObservable) Inst() metric.Float64ObservableGauge {
-	return m.Float64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeTimeToApprovalObservable) Name() string {
-	return "vcs.change.time_to_approval"
-}
+func (ChangeTimeToApprovalObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeTimeToApprovalObservable) Unit() string {
-	return "s"
-}
+func (ChangeTimeToApprovalObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeTimeToApprovalObservable) Description() string {
-	return "The amount of time since its creation it took a change (pull request/merge request/changelist) to get the first approval."
-}
+func (ChangeTimeToApprovalObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToApprovalObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (ChangeTimeToApprovalObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeTimeToApprovalObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseName returns an optional attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToApprovalObservable) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeTimeToApprovalObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeTimeToApprovalObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseRevision returns an optional attribute for the
-// "vcs.ref.base.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToApprovalObservable) AttrRefBaseRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadRevision returns an optional attribute for the
-// "vcs.ref.head.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToApprovalObservable) AttrRefHeadRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeTimeToMerge is an instrument used to record metric values conforming to
-// the "vcs.change.time_to_merge" semantic conventions. It represents the amount
-// of time since its creation it took a change (pull request/merge
-// request/changelist) to get merged into the target(base) ref.
 type ChangeTimeToMerge struct {
 	metric.Float64Gauge
 }
@@ -953,65 +452,25 @@ var newChangeTimeToMergeOpts = []metric.Float64GaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewChangeTimeToMerge returns a new ChangeTimeToMerge instrument.
 func NewChangeTimeToMerge(
 	m metric.Meter,
 	opt ...metric.Float64GaugeOption,
 ) (ChangeTimeToMerge, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeTimeToMerge{noop.Float64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeTimeToMergeOpts
-	} else {
-		opt = append(opt, newChangeTimeToMergeOpts...)
-	}
-
-	i, err := m.Float64Gauge(
-		"vcs.change.time_to_merge",
-		opt...,
-	)
-	if err != nil {
-		return ChangeTimeToMerge{noop.Float64Gauge{}}, err
-	}
-	return ChangeTimeToMerge{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeTimeToMerge), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeTimeToMerge) Inst() metric.Float64Gauge {
-	return m.Float64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeTimeToMerge) Name() string {
-	return "vcs.change.time_to_merge"
-}
+func (ChangeTimeToMerge) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeTimeToMerge) Unit() string {
-	return "s"
-}
+func (ChangeTimeToMerge) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeTimeToMerge) Description() string {
-	return "The amount of time since its creation it took a change (pull request/merge request/changelist) to get merged into the target(base) ref."
-}
+func (ChangeTimeToMerge) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m ChangeTimeToMerge) Record(
 	ctx context.Context,
 	val float64,
@@ -1019,105 +478,45 @@ func (m ChangeTimeToMerge) Record(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ChangeTimeToMerge) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeTimeToMerge) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseName returns an optional attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToMerge) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeTimeToMerge) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeTimeToMerge) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseRevision returns an optional attribute for the
-// "vcs.ref.base.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToMerge) AttrRefBaseRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadRevision returns an optional attribute for the
-// "vcs.ref.head.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToMerge) AttrRefHeadRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ChangeTimeToMergeObservable is an instrument used to record metric values
-// conforming to the "vcs.change.time_to_merge" semantic conventions. It
-// represents the amount of time since its creation it took a change (pull
-// request/merge request/changelist) to get merged into the target(base) ref.
 type ChangeTimeToMergeObservable struct {
 	metric.Float64ObservableGauge
 }
@@ -1127,125 +526,65 @@ var newChangeTimeToMergeObservableOpts = []metric.Float64ObservableGaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewChangeTimeToMergeObservable returns a new ChangeTimeToMergeObservable
-// instrument.
 func NewChangeTimeToMergeObservable(
 	m metric.Meter,
 	opt ...metric.Float64ObservableGaugeOption,
 ) (ChangeTimeToMergeObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ChangeTimeToMergeObservable{noop.Float64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newChangeTimeToMergeObservableOpts
-	} else {
-		opt = append(opt, newChangeTimeToMergeObservableOpts...)
-	}
-
-	i, err := m.Float64ObservableGauge(
-		"vcs.change.time_to_merge",
-		opt...,
-	)
-	if err != nil {
-		return ChangeTimeToMergeObservable{noop.Float64ObservableGauge{}}, err
-	}
-	return ChangeTimeToMergeObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ChangeTimeToMergeObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ChangeTimeToMergeObservable) Inst() metric.Float64ObservableGauge {
-	return m.Float64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ChangeTimeToMergeObservable) Name() string {
-	return "vcs.change.time_to_merge"
-}
+func (ChangeTimeToMergeObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ChangeTimeToMergeObservable) Unit() string {
-	return "s"
-}
+func (ChangeTimeToMergeObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ChangeTimeToMergeObservable) Description() string {
-	return "The amount of time since its creation it took a change (pull request/merge request/changelist) to get merged into the target(base) ref."
-}
+func (ChangeTimeToMergeObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToMergeObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (ChangeTimeToMergeObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ChangeTimeToMergeObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseName returns an optional attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (ChangeTimeToMergeObservable) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ChangeTimeToMergeObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ChangeTimeToMergeObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseRevision returns an optional attribute for the
-// "vcs.ref.base.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToMergeObservable) AttrRefBaseRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadRevision returns an optional attribute for the
-// "vcs.ref.head.revision" semantic convention. It represents the revision,
-// literally [revised version], The revision most often refers to a commit object
-// in Git, or a revision number in SVN.
-//
-// [revised version]: https://www.merriam-webster.com/dictionary/revision
 func (ChangeTimeToMergeObservable) AttrRefHeadRevision(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.revision", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ContributorCount is an instrument used to record metric values conforming to
-// the "vcs.contributor.count" semantic conventions. It represents the number of
-// unique contributors to a repository.
 type ContributorCount struct {
 	metric.Int64Gauge
 }
@@ -1255,134 +594,55 @@ var newContributorCountOpts = []metric.Int64GaugeOption{
 	metric.WithUnit("{contributor}"),
 }
 
-// NewContributorCount returns a new ContributorCount instrument.
 func NewContributorCount(
 	m metric.Meter,
 	opt ...metric.Int64GaugeOption,
 ) (ContributorCount, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ContributorCount{noop.Int64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newContributorCountOpts
-	} else {
-		opt = append(opt, newContributorCountOpts...)
-	}
-
-	i, err := m.Int64Gauge(
-		"vcs.contributor.count",
-		opt...,
-	)
-	if err != nil {
-		return ContributorCount{noop.Int64Gauge{}}, err
-	}
-	return ContributorCount{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ContributorCount), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ContributorCount) Inst() metric.Int64Gauge {
-	return m.Int64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ContributorCount) Name() string {
-	return "vcs.contributor.count"
-}
+func (ContributorCount) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ContributorCount) Unit() string {
-	return "{contributor}"
-}
+func (ContributorCount) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ContributorCount) Description() string {
-	return "The number of unique contributors to a repository."
-}
+func (ContributorCount) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m ContributorCount) Record(
 	ctx context.Context,
 	val int64,
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ContributorCount) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ContributorCount) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ContributorCount) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ContributorCount) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ContributorCountObservable is an instrument used to record metric values
-// conforming to the "vcs.contributor.count" semantic conventions. It represents
-// the number of unique contributors to a repository.
 type ContributorCountObservable struct {
 	metric.Int64ObservableGauge
 }
@@ -1392,87 +652,45 @@ var newContributorCountObservableOpts = []metric.Int64ObservableGaugeOption{
 	metric.WithUnit("{contributor}"),
 }
 
-// NewContributorCountObservable returns a new ContributorCountObservable
-// instrument.
 func NewContributorCountObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableGaugeOption,
 ) (ContributorCountObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ContributorCountObservable{noop.Int64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newContributorCountObservableOpts
-	} else {
-		opt = append(opt, newContributorCountObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableGauge(
-		"vcs.contributor.count",
-		opt...,
-	)
-	if err != nil {
-		return ContributorCountObservable{noop.Int64ObservableGauge{}}, err
-	}
-	return ContributorCountObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ContributorCountObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ContributorCountObservable) Inst() metric.Int64ObservableGauge {
-	return m.Int64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ContributorCountObservable) Name() string {
-	return "vcs.contributor.count"
-}
+func (ContributorCountObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ContributorCountObservable) Unit() string {
-	return "{contributor}"
-}
+func (ContributorCountObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ContributorCountObservable) Description() string {
-	return "The number of unique contributors to a repository."
-}
+func (ContributorCountObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (ContributorCountObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (ContributorCountObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (ContributorCountObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (ContributorCountObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefCount is an instrument used to record metric values conforming to the
-// "vcs.ref.count" semantic conventions. It represents the number of refs of type
-// branch or tag in a repository.
 type RefCount struct {
 	metric.Int64UpDownCounter
 }
@@ -1482,64 +700,25 @@ var newRefCountOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{ref}"),
 }
 
-// NewRefCount returns a new RefCount instrument.
 func NewRefCount(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (RefCount, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefCount{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefCountOpts
-	} else {
-		opt = append(opt, newRefCountOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"vcs.ref.count",
-		opt...,
-	)
-	if err != nil {
-		return RefCount{noop.Int64UpDownCounter{}}, err
-	}
-	return RefCount{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefCount), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefCount) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefCount) Name() string {
-	return "vcs.ref.count"
-}
+func (RefCount) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefCount) Unit() string {
-	return "{ref}"
-}
+func (RefCount) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefCount) Description() string {
-	return "The number of refs of type branch or tag in a repository."
-}
+func (RefCount) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The refType is the the type of the [reference] in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m RefCount) Add(
 	ctx context.Context,
 	incr int64,
@@ -1547,75 +726,30 @@ func (m RefCount) Add(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("vcs.ref.type", string(refType)),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.ref.type", string(refType)),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m RefCount) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefCount) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefCount) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefCount) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefCountObservable is an instrument used to record metric values conforming to
-// the "vcs.ref.count" semantic conventions. It represents the number of refs of
-// type branch or tag in a repository.
 type RefCountObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -1625,95 +759,50 @@ var newRefCountObservableOpts = []metric.Int64ObservableUpDownCounterOption{
 	metric.WithUnit("{ref}"),
 }
 
-// NewRefCountObservable returns a new RefCountObservable instrument.
 func NewRefCountObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (RefCountObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefCountObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefCountObservableOpts
-	} else {
-		opt = append(opt, newRefCountObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"vcs.ref.count",
-		opt...,
-	)
-	if err != nil {
-		return RefCountObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return RefCountObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefCountObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefCountObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefCountObservable) Name() string {
-	return "vcs.ref.count"
-}
+func (RefCountObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefCountObservable) Unit() string {
-	return "{ref}"
-}
+func (RefCountObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefCountObservable) Description() string {
-	return "The number of refs of type branch or tag in a repository."
-}
+func (RefCountObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRefType returns a required attribute for the "vcs.ref.type" semantic
-// convention. It represents the type of the [reference] in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefCountObservable) AttrRefType(val RefTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (RefCountObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefCountObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefCountObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefCountObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefLinesDelta is an instrument used to record metric values conforming to the
-// "vcs.ref.lines_delta" semantic conventions. It represents the number of lines
-// added/removed in a ref (branch) relative to the ref from the
-// `vcs.ref.base.name` attribute.
 type RefLinesDelta struct {
 	metric.Int64Gauge
 }
@@ -1723,85 +812,25 @@ var newRefLinesDeltaOpts = []metric.Int64GaugeOption{
 	metric.WithUnit("{line}"),
 }
 
-// NewRefLinesDelta returns a new RefLinesDelta instrument.
 func NewRefLinesDelta(
 	m metric.Meter,
 	opt ...metric.Int64GaugeOption,
 ) (RefLinesDelta, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefLinesDelta{noop.Int64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefLinesDeltaOpts
-	} else {
-		opt = append(opt, newRefLinesDeltaOpts...)
-	}
-
-	i, err := m.Int64Gauge(
-		"vcs.ref.lines_delta",
-		opt...,
-	)
-	if err != nil {
-		return RefLinesDelta{noop.Int64Gauge{}}, err
-	}
-	return RefLinesDelta{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefLinesDelta), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefLinesDelta) Inst() metric.Int64Gauge {
-	return m.Int64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefLinesDelta) Name() string {
-	return "vcs.ref.lines_delta"
-}
+func (RefLinesDelta) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefLinesDelta) Unit() string {
-	return "{line}"
-}
+func (RefLinesDelta) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefLinesDelta) Description() string {
-	return "The number of lines added/removed in a ref (branch) relative to the ref from the `vcs.ref.base.name` attribute."
-}
+func (RefLinesDelta) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The lineChangeType is the the type of line change being measured on a branch
-// or change.
-//
-// The refBaseName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The refBaseType is the the type of the [reference] in the repository.
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The refHeadType is the the type of the [reference] in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
-//
-// This metric should be reported for each `vcs.line_change.type` value. For
-// example if a ref added 3 lines and removed 2 lines,
-// instrumentation SHOULD report two measurements: 3 and 2 (both positive
-// numbers).
-// If number of lines added/removed should be calculated from the start of time,
-// then `vcs.ref.base.name` SHOULD be set to an empty string.
 func (m RefLinesDelta) Record(
 	ctx context.Context,
 	val int64,
@@ -1813,99 +842,35 @@ func (m RefLinesDelta) Record(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.line_change.type", string(lineChangeType)),
-			attribute.String("vcs.ref.base.name", refBaseName),
-			attribute.String("vcs.ref.base.type", string(refBaseType)),
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.ref.head.type", string(refHeadType)),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.line_change.type", string(lineChangeType)),
-				attribute.String("vcs.ref.base.name", refBaseName),
-				attribute.String("vcs.ref.base.type", string(refBaseType)),
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.ref.head.type", string(refHeadType)),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// This metric should be reported for each `vcs.line_change.type` value. For
-// example if a ref added 3 lines and removed 2 lines,
-// instrumentation SHOULD report two measurements: 3 and 2 (both positive
-// numbers).
-// If number of lines added/removed should be calculated from the start of time,
-// then `vcs.ref.base.name` SHOULD be set to an empty string.
 func (m RefLinesDelta) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrChangeID returns an optional attribute for the "vcs.change.id" semantic
-// convention. It represents the ID of the change (pull request/merge
-// request/changelist) if applicable. This is usually a unique (within
-// repository) identifier generated by the VCS system.
 func (RefLinesDelta) AttrChangeID(val string) attribute.KeyValue {
-	return attribute.String("vcs.change.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefLinesDelta) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefLinesDelta) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefLinesDelta) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefLinesDeltaObservable is an instrument used to record metric values
-// conforming to the "vcs.ref.lines_delta" semantic conventions. It represents
-// the number of lines added/removed in a ref (branch) relative to the ref from
-// the `vcs.ref.base.name` attribute.
 type RefLinesDeltaObservable struct {
 	metric.Int64ObservableGauge
 }
@@ -1915,138 +880,75 @@ var newRefLinesDeltaObservableOpts = []metric.Int64ObservableGaugeOption{
 	metric.WithUnit("{line}"),
 }
 
-// NewRefLinesDeltaObservable returns a new RefLinesDeltaObservable instrument.
 func NewRefLinesDeltaObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableGaugeOption,
 ) (RefLinesDeltaObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefLinesDeltaObservable{noop.Int64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefLinesDeltaObservableOpts
-	} else {
-		opt = append(opt, newRefLinesDeltaObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableGauge(
-		"vcs.ref.lines_delta",
-		opt...,
-	)
-	if err != nil {
-		return RefLinesDeltaObservable{noop.Int64ObservableGauge{}}, err
-	}
-	return RefLinesDeltaObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefLinesDeltaObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefLinesDeltaObservable) Inst() metric.Int64ObservableGauge {
-	return m.Int64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefLinesDeltaObservable) Name() string {
-	return "vcs.ref.lines_delta"
-}
+func (RefLinesDeltaObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefLinesDeltaObservable) Unit() string {
-	return "{line}"
-}
+func (RefLinesDeltaObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefLinesDeltaObservable) Description() string {
-	return "The number of lines added/removed in a ref (branch) relative to the ref from the `vcs.ref.base.name` attribute."
-}
+func (RefLinesDeltaObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrLineChangeType returns a required attribute for the "vcs.line_change.type"
-// semantic convention. It represents the type of line change being measured on a
-// branch or change.
 func (RefLinesDeltaObservable) AttrLineChangeType(val LineChangeTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.line_change.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseName returns a required attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefLinesDeltaObservable) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseType returns a required attribute for the "vcs.ref.base.type"
-// semantic convention. It represents the type of the [reference] in the
-// repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefLinesDeltaObservable) AttrRefBaseType(val RefBaseTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefLinesDeltaObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadType returns a required attribute for the "vcs.ref.head.type"
-// semantic convention. It represents the type of the [reference] in the
-// repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefLinesDeltaObservable) AttrRefHeadType(val RefHeadTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (RefLinesDeltaObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrChangeID returns an optional attribute for the "vcs.change.id" semantic
-// convention. It represents the ID of the change (pull request/merge
-// request/changelist) if applicable. This is usually a unique (within
-// repository) identifier generated by the VCS system.
 func (RefLinesDeltaObservable) AttrChangeID(val string) attribute.KeyValue {
-	return attribute.String("vcs.change.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefLinesDeltaObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefLinesDeltaObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefLinesDeltaObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefRevisionsDelta is an instrument used to record metric values conforming to
-// the "vcs.ref.revisions_delta" semantic conventions. It represents the number
-// of revisions (commits) a ref (branch) is ahead/behind the branch from the
-// `vcs.ref.base.name` attribute.
 type RefRevisionsDelta struct {
 	metric.Int64Gauge
 }
@@ -2056,82 +958,25 @@ var newRefRevisionsDeltaOpts = []metric.Int64GaugeOption{
 	metric.WithUnit("{revision}"),
 }
 
-// NewRefRevisionsDelta returns a new RefRevisionsDelta instrument.
 func NewRefRevisionsDelta(
 	m metric.Meter,
 	opt ...metric.Int64GaugeOption,
 ) (RefRevisionsDelta, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefRevisionsDelta{noop.Int64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefRevisionsDeltaOpts
-	} else {
-		opt = append(opt, newRefRevisionsDeltaOpts...)
-	}
-
-	i, err := m.Int64Gauge(
-		"vcs.ref.revisions_delta",
-		opt...,
-	)
-	if err != nil {
-		return RefRevisionsDelta{noop.Int64Gauge{}}, err
-	}
-	return RefRevisionsDelta{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefRevisionsDelta), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefRevisionsDelta) Inst() metric.Int64Gauge {
-	return m.Int64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefRevisionsDelta) Name() string {
-	return "vcs.ref.revisions_delta"
-}
+func (RefRevisionsDelta) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefRevisionsDelta) Unit() string {
-	return "{revision}"
-}
+func (RefRevisionsDelta) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefRevisionsDelta) Description() string {
-	return "The number of revisions (commits) a ref (branch) is ahead/behind the branch from the `vcs.ref.base.name` attribute."
-}
+func (RefRevisionsDelta) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The refBaseName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The refBaseType is the the type of the [reference] in the repository.
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The refHeadType is the the type of the [reference] in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// The revisionDeltaDirection is the the type of revision comparison.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
-//
-// This metric should be reported for each `vcs.revision_delta.direction` value.
-// For example if branch `a` is 3 commits behind and 2 commits ahead of `trunk`,
-// instrumentation SHOULD report two measurements: 3 and 2 (both positive
-// numbers) and `vcs.ref.base.name` is set to `trunk`.
 func (m RefRevisionsDelta) Record(
 	ctx context.Context,
 	val int64,
@@ -2143,97 +988,35 @@ func (m RefRevisionsDelta) Record(
 	revisionDeltaDirection RevisionDeltaDirectionAttr,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.ref.base.name", refBaseName),
-			attribute.String("vcs.ref.base.type", string(refBaseType)),
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.ref.head.type", string(refHeadType)),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			attribute.String("vcs.revision_delta.direction", string(revisionDeltaDirection)),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.ref.base.name", refBaseName),
-				attribute.String("vcs.ref.base.type", string(refBaseType)),
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.ref.head.type", string(refHeadType)),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-				attribute.String("vcs.revision_delta.direction", string(revisionDeltaDirection)),
-			)...,
-		),
-	)
-
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// This metric should be reported for each `vcs.revision_delta.direction` value.
-// For example if branch `a` is 3 commits behind and 2 commits ahead of `trunk`,
-// instrumentation SHOULD report two measurements: 3 and 2 (both positive
-// numbers) and `vcs.ref.base.name` is set to `trunk`.
 func (m RefRevisionsDelta) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrChangeID returns an optional attribute for the "vcs.change.id" semantic
-// convention. It represents the ID of the change (pull request/merge
-// request/changelist) if applicable. This is usually a unique (within
-// repository) identifier generated by the VCS system.
 func (RefRevisionsDelta) AttrChangeID(val string) attribute.KeyValue {
-	return attribute.String("vcs.change.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefRevisionsDelta) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefRevisionsDelta) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefRevisionsDelta) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefRevisionsDeltaObservable is an instrument used to record metric values
-// conforming to the "vcs.ref.revisions_delta" semantic conventions. It
-// represents the number of revisions (commits) a ref (branch) is ahead/behind
-// the branch from the `vcs.ref.base.name` attribute.
 type RefRevisionsDeltaObservable struct {
 	metric.Int64ObservableGauge
 }
@@ -2243,139 +1026,75 @@ var newRefRevisionsDeltaObservableOpts = []metric.Int64ObservableGaugeOption{
 	metric.WithUnit("{revision}"),
 }
 
-// NewRefRevisionsDeltaObservable returns a new RefRevisionsDeltaObservable
-// instrument.
 func NewRefRevisionsDeltaObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableGaugeOption,
 ) (RefRevisionsDeltaObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefRevisionsDeltaObservable{noop.Int64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefRevisionsDeltaObservableOpts
-	} else {
-		opt = append(opt, newRefRevisionsDeltaObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableGauge(
-		"vcs.ref.revisions_delta",
-		opt...,
-	)
-	if err != nil {
-		return RefRevisionsDeltaObservable{noop.Int64ObservableGauge{}}, err
-	}
-	return RefRevisionsDeltaObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefRevisionsDeltaObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefRevisionsDeltaObservable) Inst() metric.Int64ObservableGauge {
-	return m.Int64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefRevisionsDeltaObservable) Name() string {
-	return "vcs.ref.revisions_delta"
-}
+func (RefRevisionsDeltaObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefRevisionsDeltaObservable) Unit() string {
-	return "{revision}"
-}
+func (RefRevisionsDeltaObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefRevisionsDeltaObservable) Description() string {
-	return "The number of revisions (commits) a ref (branch) is ahead/behind the branch from the `vcs.ref.base.name` attribute."
-}
+func (RefRevisionsDeltaObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRefBaseName returns a required attribute for the "vcs.ref.base.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefRevisionsDeltaObservable) AttrRefBaseName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefBaseType returns a required attribute for the "vcs.ref.base.type"
-// semantic convention. It represents the type of the [reference] in the
-// repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefRevisionsDeltaObservable) AttrRefBaseType(val RefBaseTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.base.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefRevisionsDeltaObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadType returns a required attribute for the "vcs.ref.head.type"
-// semantic convention. It represents the type of the [reference] in the
-// repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefRevisionsDeltaObservable) AttrRefHeadType(val RefHeadTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (RefRevisionsDeltaObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRevisionDeltaDirection returns a required attribute for the
-// "vcs.revision_delta.direction" semantic convention. It represents the type of
-// revision comparison.
 func (RefRevisionsDeltaObservable) AttrRevisionDeltaDirection(val RevisionDeltaDirectionAttr) attribute.KeyValue {
-	return attribute.String("vcs.revision_delta.direction", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrChangeID returns an optional attribute for the "vcs.change.id" semantic
-// convention. It represents the ID of the change (pull request/merge
-// request/changelist) if applicable. This is usually a unique (within
-// repository) identifier generated by the VCS system.
 func (RefRevisionsDeltaObservable) AttrChangeID(val string) attribute.KeyValue {
-	return attribute.String("vcs.change.id", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefRevisionsDeltaObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefRevisionsDeltaObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefRevisionsDeltaObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefTime is an instrument used to record metric values conforming to the
-// "vcs.ref.time" semantic conventions. It represents the time a ref (branch)
-// created from the default branch (trunk) has existed. The `ref.type` attribute
-// will always be `branch`.
 type RefTime struct {
 	metric.Float64Gauge
 }
@@ -2385,68 +1104,25 @@ var newRefTimeOpts = []metric.Float64GaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewRefTime returns a new RefTime instrument.
 func NewRefTime(
 	m metric.Meter,
 	opt ...metric.Float64GaugeOption,
 ) (RefTime, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefTime{noop.Float64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefTimeOpts
-	} else {
-		opt = append(opt, newRefTimeOpts...)
-	}
-
-	i, err := m.Float64Gauge(
-		"vcs.ref.time",
-		opt...,
-	)
-	if err != nil {
-		return RefTime{noop.Float64Gauge{}}, err
-	}
-	return RefTime{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefTime), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefTime) Inst() metric.Float64Gauge {
-	return m.Float64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefTime) Name() string {
-	return "vcs.ref.time"
-}
+func (RefTime) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefTime) Unit() string {
-	return "s"
-}
+func (RefTime) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefTime) Description() string {
-	return "Time a ref (branch) created from the default branch (trunk) has existed. The `ref.type` attribute will always be `branch`."
-}
+func (RefTime) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The refHeadName is the the name of the [reference] such as **branch** or
-// **tag** in the repository.
-//
-// The refHeadType is the the type of the [reference] in the repository.
-//
-// The repositoryUrlFull is the the [canonical URL] of the repository providing
-// the complete HTTP(S) address in order to locate and identify the repository
-// through a browser.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (m RefTime) Record(
 	ctx context.Context,
 	val float64,
@@ -2455,78 +1131,30 @@ func (m RefTime) Record(
 	repositoryUrlFull string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Gauge.Record(ctx, val, metric.WithAttributes(
-			attribute.String("vcs.ref.head.name", refHeadName),
-			attribute.String("vcs.ref.head.type", string(refHeadType)),
-			attribute.String("vcs.repository.url.full", repositoryUrlFull),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("vcs.ref.head.name", refHeadName),
-				attribute.String("vcs.ref.head.type", string(refHeadType)),
-				attribute.String("vcs.repository.url.full", repositoryUrlFull),
-			)...,
-		),
-	)
-
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m RefTime) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Gauge.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefTime) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefTime) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefTime) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RefTimeObservable is an instrument used to record metric values conforming to
-// the "vcs.ref.time" semantic conventions. It represents the time a ref (branch)
-// created from the default branch (trunk) has existed. The `ref.type` attribute
-// will always be `branch`.
 type RefTimeObservable struct {
 	metric.Float64ObservableGauge
 }
@@ -2536,104 +1164,55 @@ var newRefTimeObservableOpts = []metric.Float64ObservableGaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewRefTimeObservable returns a new RefTimeObservable instrument.
 func NewRefTimeObservable(
 	m metric.Meter,
 	opt ...metric.Float64ObservableGaugeOption,
 ) (RefTimeObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RefTimeObservable{noop.Float64ObservableGauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRefTimeObservableOpts
-	} else {
-		opt = append(opt, newRefTimeObservableOpts...)
-	}
-
-	i, err := m.Float64ObservableGauge(
-		"vcs.ref.time",
-		opt...,
-	)
-	if err != nil {
-		return RefTimeObservable{noop.Float64ObservableGauge{}}, err
-	}
-	return RefTimeObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RefTimeObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RefTimeObservable) Inst() metric.Float64ObservableGauge {
-	return m.Float64ObservableGauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64ObservableGauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RefTimeObservable) Name() string {
-	return "vcs.ref.time"
-}
+func (RefTimeObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RefTimeObservable) Unit() string {
-	return "s"
-}
+func (RefTimeObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RefTimeObservable) Description() string {
-	return "Time a ref (branch) created from the default branch (trunk) has existed. The `ref.type` attribute will always be `branch`."
-}
+func (RefTimeObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRefHeadName returns a required attribute for the "vcs.ref.head.name"
-// semantic convention. It represents the name of the [reference] such as
-// **branch** or **tag** in the repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefTimeObservable) AttrRefHeadName(val string) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRefHeadType returns a required attribute for the "vcs.ref.head.type"
-// semantic convention. It represents the type of the [reference] in the
-// repository.
-//
-// [reference]: https://git-scm.com/docs/gitglossary#def_ref
 func (RefTimeObservable) AttrRefHeadType(val RefHeadTypeAttr) attribute.KeyValue {
-	return attribute.String("vcs.ref.head.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryURLFull returns a required attribute for the
-// "vcs.repository.url.full" semantic convention. It represents the
-// [canonical URL] of the repository providing the complete HTTP(S) address in
-// order to locate and identify the repository through a browser.
-//
-// [canonical URL]: https://support.google.com/webmasters/answer/10347851
 func (RefTimeObservable) AttrRepositoryURLFull(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.url.full", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RefTimeObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRepositoryName returns an optional attribute for the "vcs.repository.name"
-// semantic convention. It represents the human readable name of the repository.
-// It SHOULD NOT include any additional identifier like Group/SubGroup in GitLab
-// or organization in GitHub.
 func (RefTimeObservable) AttrRepositoryName(val string) attribute.KeyValue {
-	return attribute.String("vcs.repository.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RefTimeObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RepositoryCount is an instrument used to record metric values conforming to
-// the "vcs.repository.count" semantic conventions. It represents the number of
-// repositories in an organization.
 type RepositoryCount struct {
 	metric.Int64UpDownCounter
 }
@@ -2643,114 +1222,49 @@ var newRepositoryCountOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{repository}"),
 }
 
-// NewRepositoryCount returns a new RepositoryCount instrument.
 func NewRepositoryCount(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (RepositoryCount, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RepositoryCount{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRepositoryCountOpts
-	} else {
-		opt = append(opt, newRepositoryCountOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"vcs.repository.count",
-		opt...,
-	)
-	if err != nil {
-		return RepositoryCount{noop.Int64UpDownCounter{}}, err
-	}
-	return RepositoryCount{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RepositoryCount), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RepositoryCount) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RepositoryCount) Name() string {
-	return "vcs.repository.count"
-}
+func (RepositoryCount) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RepositoryCount) Unit() string {
-	return "{repository}"
-}
+func (RepositoryCount) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RepositoryCount) Description() string {
-	return "The number of repositories in an organization."
-}
+func (RepositoryCount) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// All additional attrs passed are included in the recorded value.
 func (m RepositoryCount) Add(
 	ctx context.Context,
 	incr int64,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			attrs...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m RepositoryCount) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RepositoryCount) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RepositoryCount) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// RepositoryCountObservable is an instrument used to record metric values
-// conforming to the "vcs.repository.count" semantic conventions. It represents
-// the number of repositories in an organization.
 type RepositoryCountObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -2760,62 +1274,31 @@ var newRepositoryCountObservableOpts = []metric.Int64ObservableUpDownCounterOpti
 	metric.WithUnit("{repository}"),
 }
 
-// NewRepositoryCountObservable returns a new RepositoryCountObservable
-// instrument.
 func NewRepositoryCountObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (RepositoryCountObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return RepositoryCountObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newRepositoryCountObservableOpts
-	} else {
-		opt = append(opt, newRepositoryCountObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"vcs.repository.count",
-		opt...,
-	)
-	if err != nil {
-		return RepositoryCountObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return RepositoryCountObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(RepositoryCountObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m RepositoryCountObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (RepositoryCountObservable) Name() string {
-	return "vcs.repository.count"
-}
+func (RepositoryCountObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (RepositoryCountObservable) Unit() string {
-	return "{repository}"
-}
+func (RepositoryCountObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (RepositoryCountObservable) Description() string {
-	return "The number of repositories in an organization."
-}
+func (RepositoryCountObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrOwnerName returns an optional attribute for the "vcs.owner.name" semantic
-// convention. It represents the group owner within the version control system.
 func (RepositoryCountObservable) AttrOwnerName(val string) attribute.KeyValue {
-	return attribute.String("vcs.owner.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrProviderName returns an optional attribute for the "vcs.provider.name"
-// semantic convention. It represents the name of the version control system
-// provider.
 func (RepositoryCountObservable) AttrProviderName(val ProviderNameAttr) attribute.KeyValue {
-	return attribute.String("vcs.provider.name", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }

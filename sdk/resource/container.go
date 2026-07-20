@@ -1,17 +1,10 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package resource
 
 import (
-	"bufio"
 	"context"
-	"errors"
 	"io"
 	"os"
 	"regexp"
-
-	semconv "go.opentelemetry.io/otel/semconv/v1.42.0"
 )
 
 type containerIDProvider func() (string, error)
@@ -25,18 +18,9 @@ type cgroupContainerIDDetector struct{}
 
 const cgroupPath = "/proc/self/cgroup"
 
-// Detect returns a *Resource that describes the id of the container.
-// If no container id found, an empty resource will be returned.
 func (cgroupContainerIDDetector) Detect(context.Context) (*Resource, error) {
-	containerID, err := containerID()
-	if err != nil {
-		return nil, err
-	}
-
-	if containerID == "" {
-		return Empty(), nil
-	}
-	return NewWithAttributes(semconv.SchemaURL, semconv.ContainerID(containerID)), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 var (
@@ -49,41 +33,8 @@ var (
 	osOpen = defaultOSOpen
 )
 
-// getContainerIDFromCGroup returns the id of the container from the cgroup file.
-// If no container id found, an empty string will be returned.
-func getContainerIDFromCGroup() (string, error) {
-	if _, err := osStat(cgroupPath); errors.Is(err, os.ErrNotExist) {
-		// File does not exist, skip
-		return "", nil
-	}
+func getContainerIDFromCGroup() (string, error) { _ = "STUB: not implemented"; return "", nil }
 
-	file, err := osOpen(cgroupPath)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
+func getContainerIDFromReader(reader io.Reader) string { _ = "STUB: not implemented"; return "" }
 
-	return getContainerIDFromReader(file), nil
-}
-
-// getContainerIDFromReader returns the id of the container from reader.
-func getContainerIDFromReader(reader io.Reader) string {
-	scanner := bufio.NewScanner(reader)
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		if id := getContainerIDFromLine(line); id != "" {
-			return id
-		}
-	}
-	return ""
-}
-
-// getContainerIDFromLine returns the id of the container from one string line.
-func getContainerIDFromLine(line string) string {
-	matches := cgroupContainerIDRe.FindStringSubmatch(line)
-	if len(matches) <= 1 {
-		return ""
-	}
-	return matches[1]
-}
+func getContainerIDFromLine(line string) string { _ = "STUB: not implemented"; return "" }

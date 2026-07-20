@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package stdoutlog
 
 import (
@@ -14,7 +11,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// recordJSON is a JSON-serializable representation of a Record.
 type recordJSON struct {
 	Timestamp         *time.Time `json:",omitempty"`
 	ObservedTimestamp *time.Time `json:",omitempty"`
@@ -32,37 +28,6 @@ type recordJSON struct {
 }
 
 func (e *Exporter) newRecordJSON(r sdklog.Record) recordJSON {
-	res := r.Resource()
-	newRecord := recordJSON{
-		EventName:    r.EventName(),
-		Severity:     r.Severity(),
-		SeverityText: r.SeverityText(),
-		Body:         r.Body(),
-
-		TraceID:    r.TraceID(),
-		SpanID:     r.SpanID(),
-		TraceFlags: r.TraceFlags(),
-
-		Attributes: make([]attribute.KeyValue, 0, r.AttributesLen()),
-
-		Resource: res,
-		Scope:    r.InstrumentationScope(),
-
-		DroppedAttributes: r.DroppedAttributes(),
-	}
-
-	r.WalkAttributes(func(kv attribute.KeyValue) bool {
-		newRecord.Attributes = append(newRecord.Attributes, kv)
-		return true
-	})
-
-	if e.timestamps {
-		timestamp := r.Timestamp()
-		newRecord.Timestamp = &timestamp
-
-		observedTimestamp := r.ObservedTimestamp()
-		newRecord.ObservedTimestamp = &observedTimestamp
-	}
-
-	return newRecord
+	_ = "STUB: not implemented"
+	return *new(recordJSON)
 }

@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 //go:generate stringer -type=InstrumentKind -trimprefix=InstrumentKind
 
 package metric
@@ -8,217 +5,107 @@ package metric
 import (
 	"context"
 	"errors"
-	"fmt"
-	"strings"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/metric/embedded"
 	"go.opentelemetry.io/otel/sdk/instrumentation"
 	"go.opentelemetry.io/otel/sdk/metric/internal/aggregate"
-	"go.opentelemetry.io/otel/sdk/metric/internal/attrdedup"
 )
 
 var zeroScope instrumentation.Scope
 
-// InstrumentKind is the identifier of a group of instruments that all
-// performing the same function.
 type InstrumentKind uint8
 
 const (
-	// instrumentKindUndefined is an undefined instrument kind, it should not
-	// be used by any initialized type.
-	instrumentKindUndefined InstrumentKind = 0 // nolint:unused
-	// InstrumentKindCounter identifies a group of instruments that record
-	// increasing values synchronously with the code path they are measuring.
+	instrumentKindUndefined InstrumentKind = 0
+
 	InstrumentKindCounter InstrumentKind = 1
-	// InstrumentKindUpDownCounter identifies a group of instruments that
-	// record increasing and decreasing values synchronously with the code path
-	// they are measuring.
+
 	InstrumentKindUpDownCounter InstrumentKind = 2
-	// InstrumentKindHistogram identifies a group of instruments that record a
-	// distribution of values synchronously with the code path they are
-	// measuring.
+
 	InstrumentKindHistogram InstrumentKind = 3
-	// InstrumentKindObservableCounter identifies a group of instruments that
-	// record increasing values in an asynchronous callback.
+
 	InstrumentKindObservableCounter InstrumentKind = 4
-	// InstrumentKindObservableUpDownCounter identifies a group of instruments
-	// that record increasing and decreasing values in an asynchronous
-	// callback.
+
 	InstrumentKindObservableUpDownCounter InstrumentKind = 5
-	// InstrumentKindObservableGauge identifies a group of instruments that
-	// record current values in an asynchronous callback.
+
 	InstrumentKindObservableGauge InstrumentKind = 6
-	// InstrumentKindGauge identifies a group of instruments that record
-	// instantaneous values synchronously with the code path they are
-	// measuring.
+
 	InstrumentKindGauge InstrumentKind = 7
 )
 
-type nonComparable [0]func() // nolint: unused  // This is indeed used.
+type nonComparable [0]func()
 
-// Instrument describes properties an instrument is created with.
 type Instrument struct {
-	// Name is the human-readable identifier of the instrument.
 	Name string
-	// Description describes the purpose of the instrument.
+
 	Description string
-	// Kind defines the functional group of the instrument.
+
 	Kind InstrumentKind
-	// Unit is the unit of measurement recorded by the instrument.
+
 	Unit string
-	// Scope identifies the instrumentation that created the instrument.
+
 	Scope instrumentation.Scope
 
-	// Ensure forward compatibility if non-comparable fields need to be added.
-	nonComparable // nolint: unused
+	nonComparable
 }
 
-// IsEmpty reports whether all Instrument fields are their zero-value.
-func (i Instrument) IsEmpty() bool {
-	return i.Name == "" &&
-		i.Description == "" &&
-		i.Kind == instrumentKindUndefined &&
-		i.Unit == "" &&
-		i.Scope == zeroScope
-}
+func (i Instrument) IsEmpty() bool { _ = "STUB: not implemented"; return false }
 
-// matches returns whether all the non-zero-value fields of i match the
-// corresponding fields of other. If i is empty it will match all other, and
-// true will always be returned.
-func (i Instrument) matches(other Instrument) bool {
-	return i.matchesName(other) &&
-		i.matchesDescription(other) &&
-		i.matchesKind(other) &&
-		i.matchesUnit(other) &&
-		i.matchesScope(other)
-}
+func (i Instrument) matches(other Instrument) bool { _ = "STUB: not implemented"; return false }
 
-// matchesName returns true if the Name of i is "" or it equals the Name of
-// other, otherwise false.
-func (i Instrument) matchesName(other Instrument) bool {
-	return i.Name == "" || i.Name == other.Name
-}
+func (i Instrument) matchesName(other Instrument) bool { _ = "STUB: not implemented"; return false }
 
-// matchesDescription returns true if the Description of i is "" or it equals
-// the Description of other, otherwise false.
 func (i Instrument) matchesDescription(other Instrument) bool {
-	return i.Description == "" || i.Description == other.Description
+	_ = "STUB: not implemented"
+	return false
 }
 
-// matchesKind returns true if the Kind of i is its zero-value or it equals the
-// Kind of other, otherwise false.
-func (i Instrument) matchesKind(other Instrument) bool {
-	return i.Kind == instrumentKindUndefined || i.Kind == other.Kind
-}
+func (i Instrument) matchesKind(other Instrument) bool { _ = "STUB: not implemented"; return false }
 
-// matchesUnit returns true if the Unit of i is its zero-value or it equals the
-// Unit of other, otherwise false.
-func (i Instrument) matchesUnit(other Instrument) bool {
-	return i.Unit == "" || i.Unit == other.Unit
-}
+func (i Instrument) matchesUnit(other Instrument) bool { _ = "STUB: not implemented"; return false }
 
-// matchesScope returns true if the Scope of i is its zero-value or it equals
-// the Scope of other, otherwise false.
-func (i Instrument) matchesScope(other Instrument) bool {
-	return (i.Scope.Name == "" || i.Scope.Name == other.Scope.Name) &&
-		(i.Scope.Version == "" || i.Scope.Version == other.Scope.Version) &&
-		(i.Scope.SchemaURL == "" || i.Scope.SchemaURL == other.Scope.SchemaURL)
-}
+func (i Instrument) matchesScope(other Instrument) bool { _ = "STUB: not implemented"; return false }
 
-// Stream describes the stream of data an instrument produces.
 type Stream struct {
-	// Name is the human-readable identifier of the stream.
 	Name string
-	// Description describes the purpose of the data.
+
 	Description string
-	// Unit is the unit of measurement recorded.
+
 	Unit string
-	// Aggregation the stream uses for an instrument.
+
 	Aggregation Aggregation
-	// AttributeFilter is an attribute Filter applied to the attributes
-	// recorded for an instrument's measurement. If the filter returns false
-	// the attribute will not be recorded, otherwise, if it returns true, it
-	// will record the attribute.
-	//
-	// Note that attributes filtered out by a View may still appear on Exemplars,
-	// because Exemplars are recorded with the dropped measurement attributes
-	// when View attribute filtering is applied.
-	//
-	// Use NewAllowKeysFilter from "go.opentelemetry.io/otel/attribute" to
-	// provide an allow-list of attribute keys here.
+
 	AttributeFilter attribute.Filter
-	// ExemplarReservoirProvider selects the
-	// [go.opentelemetry.io/otel/sdk/metric/exemplar.ReservoirProvider] based
-	// on the [Aggregation].
-	//
-	// If unspecified, [DefaultExemplarReservoirProviderSelector] is used.
+
 	ExemplarReservoirProviderSelector ExemplarReservoirProviderSelector
 }
 
-// instID are the identifying properties of a instrument.
 type instID struct {
-	// Name is the name of the stream.
 	Name string
-	// Description is the description of the stream.
+
 	Description string
-	// Kind defines the functional group of the instrument.
+
 	Kind InstrumentKind
-	// Unit is the unit of the stream.
+
 	Unit string
-	// Number is the number type of the stream.
+
 	Number string
 }
 
-// Returns a normalized copy of the instID i.
-//
-// Instrument names are considered case-insensitive. Standardize the instrument
-// name to always be lowercase for the returned instID so it can be compared
-// without the name casing affecting the comparison.
-func (i instID) normalize() instID {
-	i.Name = strings.ToLower(i.Name)
-	return i
-}
+func (i instID) normalize() instID { _ = "STUB: not implemented"; return *new(instID) }
 
 type rawAttributesOption interface {
 	RawAttributes() []attribute.KeyValue
 	Experimental()
 }
 
-func extractRawKVs[T any](opts []T) []attribute.KeyValue {
-	var rawKVs []attribute.KeyValue
-	var count int
-	for _, opt := range opts {
-		if r, ok := any(opt).(rawAttributesOption); ok {
-			count++
-			if count == 1 {
-				rawKVs = r.RawAttributes()
-			} else {
-				if count == 2 {
-					// Create a new slice to avoid modifying the original slice from the first option.
-					rawKVs = append([]attribute.KeyValue(nil), rawKVs...)
-				}
-				rawKVs = append(rawKVs, r.RawAttributes()...)
-			}
-		}
-	}
-	return rawKVs
-}
+func extractRawKVs[T any](opts []T) []attribute.KeyValue { _ = "STUB: not implemented"; return nil }
 
 func resolveAttributes(configAttrs attribute.Set, rawKVs []attribute.KeyValue) attribute.Set {
-	configAttrs, _ = attrdedup.Set(configAttrs)
-	if len(rawKVs) == 0 {
-		return configAttrs
-	}
-	rawKVs, _ = attrdedup.KeyValues(rawKVs)
-	merged := make([]attribute.KeyValue, 0, configAttrs.Len()+len(rawKVs))
-	merged = append(merged, configAttrs.ToSlice()...)
-	// rawKVs are appended after configAttrs, meaning they will override any duplicate keys in configAttrs.
-	// This behavior is documented in WithUnsafeAttributes.
-	merged = append(merged, rawKVs...)
-	// TODO(#7743): Defer computing the full attribute.NewSet.
-	return attribute.NewSet(merged...)
+	_ = "STUB: not implemented"
+	return *new(attribute.Set)
 }
 
 type int64Inst struct {
@@ -238,29 +125,24 @@ var (
 )
 
 func (i *int64Inst) Add(ctx context.Context, val int64, opts ...metric.AddOption) {
-	c := metric.NewAddConfig(opts)
-	rawKVs := extractRawKVs(opts)
-	i.aggregate(ctx, val, resolveAttributes(c.Attributes(), rawKVs))
+	_ = "STUB: not implemented"
+	return
 }
 
 func (i *int64Inst) Record(ctx context.Context, val int64, opts ...metric.RecordOption) {
-	c := metric.NewRecordConfig(opts)
-	rawKVs := extractRawKVs(opts)
-	i.aggregate(ctx, val, resolveAttributes(c.Attributes(), rawKVs))
+	_ = "STUB: not implemented"
+	return
 }
 
-func (i *int64Inst) Enabled(context.Context) bool {
-	return len(i.measures) != 0
-}
+func (i *int64Inst) Enabled(context.Context) bool { _ = "STUB: not implemented"; return false }
 
 func (i *int64Inst) aggregate(
 	ctx context.Context,
 	val int64,
 	s attribute.Set,
-) { // nolint:revive  // okay to shadow pkg with method.
-	for _, in := range i.measures {
-		in(ctx, val, s)
-	}
+) {
+	_ = "STUB: not implemented"
+	return
 }
 
 type float64Inst struct {
@@ -280,28 +162,22 @@ var (
 )
 
 func (i *float64Inst) Add(ctx context.Context, val float64, opts ...metric.AddOption) {
-	c := metric.NewAddConfig(opts)
-	rawKVs := extractRawKVs(opts)
-	i.aggregate(ctx, val, resolveAttributes(c.Attributes(), rawKVs))
+	_ = "STUB: not implemented"
+	return
 }
 
 func (i *float64Inst) Record(ctx context.Context, val float64, opts ...metric.RecordOption) {
-	c := metric.NewRecordConfig(opts)
-	rawKVs := extractRawKVs(opts)
-	i.aggregate(ctx, val, resolveAttributes(c.Attributes(), rawKVs))
+	_ = "STUB: not implemented"
+	return
 }
 
-func (i *float64Inst) Enabled(context.Context) bool {
-	return len(i.measures) != 0
-}
+func (i *float64Inst) Enabled(context.Context) bool { _ = "STUB: not implemented"; return false }
 
 func (i *float64Inst) aggregate(ctx context.Context, val float64, s attribute.Set) {
-	for _, in := range i.measures {
-		in(ctx, val, s)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-// observableID is a comparable unique identifier of an observable.
 type observableID[N int64 | float64] struct {
 	name        string
 	description string
@@ -326,9 +202,8 @@ var (
 )
 
 func newFloat64Observable(m *meter, kind InstrumentKind, name, desc, u string) float64Observable {
-	return float64Observable{
-		observable: newObservable[float64](m, kind, name, desc, u),
-	}
+	_ = "STUB: not implemented"
+	return *new(float64Observable)
 }
 
 type int64Observable struct {
@@ -347,9 +222,8 @@ var (
 )
 
 func newInt64Observable(m *meter, kind InstrumentKind, name, desc, u string) int64Observable {
-	return int64Observable{
-		observable: newObservable[int64](m, kind, name, desc, u),
-	}
+	_ = "STUB: not implemented"
+	return *new(int64Observable)
 }
 
 type observable[N int64 | float64] struct {
@@ -362,53 +236,21 @@ type observable[N int64 | float64] struct {
 }
 
 func newObservable[N int64 | float64](m *meter, kind InstrumentKind, name, desc, u string) *observable[N] {
-	return &observable[N]{
-		observableID: observableID[N]{
-			name:        name,
-			description: desc,
-			kind:        kind,
-			unit:        u,
-			scope:       m.scope,
-		},
-		meter: m,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// observe records the val for the set of attrs.
-func (o *observable[N]) observe(val N, s attribute.Set) {
-	o.measures.observe(val, s)
-}
+func (o *observable[N]) observe(val N, s attribute.Set) { _ = "STUB: not implemented"; return }
 
 func (o *observable[N]) appendMeasures(meas []aggregate.Measure[N]) {
-	o.measures = append(o.measures, meas...)
+	_ = "STUB: not implemented"
+	return
 }
 
 type measures[N int64 | float64] []aggregate.Measure[N]
 
-// observe records the val for the set of attrs.
-func (m measures[N]) observe(val N, s attribute.Set) {
-	for _, in := range m {
-		in(context.Background(), val, s)
-	}
-}
+func (m measures[N]) observe(val N, s attribute.Set) { _ = "STUB: not implemented"; return }
 
 var errEmptyAgg = errors.New("no aggregators for observable instrument")
 
-// registerable returns an error if the observable o should not be registered,
-// and nil if it should. An errEmptyAgg error is returned if o is effectively a
-// no-op because it does not have any aggregators. Also, an error is returned
-// if scope defines a Meter other than the one o was created by.
-func (o *observable[N]) registerable(m *meter) error {
-	if len(o.measures) == 0 {
-		return errEmptyAgg
-	}
-	if m != o.meter {
-		return fmt.Errorf(
-			"invalid registration: observable %q from Meter %q, registered with Meter %q",
-			o.name,
-			o.scope.Name,
-			m.scope.Name,
-		)
-	}
-	return nil
-}
+func (o *observable[N]) registerable(m *meter) error { _ = "STUB: not implemented"; return nil }

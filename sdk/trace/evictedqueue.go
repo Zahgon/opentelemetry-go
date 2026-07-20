@@ -1,16 +1,9 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package trace
 
 import (
-	"slices"
 	"sync"
-
-	"go.opentelemetry.io/otel/internal/global"
 )
 
-// evictedQueue is a FIFO queue with a configurable capacity.
 type evictedQueue[T any] struct {
 	queue          []T
 	capacity       int
@@ -19,46 +12,12 @@ type evictedQueue[T any] struct {
 	logDroppedOnce sync.Once
 }
 
-func newEvictedQueueEvent(capacity int) evictedQueue[Event] {
-	// Do not pre-allocate queue, do this lazily.
-	return evictedQueue[Event]{
-		capacity:      capacity,
-		logDroppedMsg: "limit reached: dropping trace trace.Event",
-	}
-}
+func newEvictedQueueEvent(capacity int) evictedQueue[Event] { _ = "STUB: not implemented"; return nil }
 
-func newEvictedQueueLink(capacity int) evictedQueue[Link] {
-	// Do not pre-allocate queue, do this lazily.
-	return evictedQueue[Link]{
-		capacity:      capacity,
-		logDroppedMsg: "limit reached: dropping trace trace.Link",
-	}
-}
+func newEvictedQueueLink(capacity int) evictedQueue[Link] { _ = "STUB: not implemented"; return nil }
 
-// add adds value to the evictedQueue eq. If eq is at capacity, the oldest
-// queued value will be discarded and the drop count incremented.
-func (eq *evictedQueue[T]) add(value T) {
-	if eq.capacity == 0 {
-		eq.droppedCount++
-		eq.logDropped()
-		return
-	}
+func (eq *evictedQueue[T]) add(value T) { _ = "STUB: not implemented"; return }
 
-	if eq.capacity > 0 && len(eq.queue) == eq.capacity {
-		// Drop first-in while avoiding allocating more capacity to eq.queue.
-		copy(eq.queue[:eq.capacity-1], eq.queue[1:])
-		eq.queue = eq.queue[:eq.capacity-1]
-		eq.droppedCount++
-		eq.logDropped()
-	}
-	eq.queue = append(eq.queue, value)
-}
+func (eq *evictedQueue[T]) logDropped() { _ = "STUB: not implemented"; return }
 
-func (eq *evictedQueue[T]) logDropped() {
-	eq.logDroppedOnce.Do(func() { global.Warn(eq.logDroppedMsg) })
-}
-
-// copy returns a copy of the evictedQueue.
-func (eq *evictedQueue[T]) copy() []T {
-	return slices.Clone(eq.queue)
-}
+func (eq *evictedQueue[T]) copy() []T { _ = "STUB: not implemented"; return nil }

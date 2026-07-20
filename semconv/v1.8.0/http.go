@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package semconv
 
 import (
@@ -12,7 +9,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// HTTP scheme attributes.
 var (
 	HTTPSchemeHTTP  = HTTPSchemeKey.String("http")
 	HTTPSchemeHTTPS = HTTPSchemeKey.String("https")
@@ -46,58 +42,42 @@ var sc = &internal.SemanticConventions{
 	NetTransportUnix:            NetTransportUnix,
 }
 
-// NetAttributesFromHTTPRequest generates attributes of the net
-// namespace as specified by the OpenTelemetry specification for a
-// span.  The network parameter is a string that net.Dial function
-// from standard library can understand.
 func NetAttributesFromHTTPRequest(network string, request *http.Request) []attribute.KeyValue {
-	return sc.NetAttributesFromHTTPRequest(network, request)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// EndUserAttributesFromHTTPRequest generates attributes of the
-// enduser namespace as specified by the OpenTelemetry specification
-// for a span.
 func EndUserAttributesFromHTTPRequest(request *http.Request) []attribute.KeyValue {
-	return sc.EndUserAttributesFromHTTPRequest(request)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// HTTPClientAttributesFromHTTPRequest generates attributes of the
-// http namespace as specified by the OpenTelemetry specification for
-// a span on the client side.
 func HTTPClientAttributesFromHTTPRequest(request *http.Request) []attribute.KeyValue {
-	return sc.HTTPClientAttributesFromHTTPRequest(request)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// HTTPServerMetricAttributesFromHTTPRequest generates low-cardinality attributes
-// to be used with server-side HTTP metrics.
 func HTTPServerMetricAttributesFromHTTPRequest(serverName string, request *http.Request) []attribute.KeyValue {
-	return sc.HTTPServerMetricAttributesFromHTTPRequest(serverName, request)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// HTTPServerAttributesFromHTTPRequest generates attributes of the
-// http namespace as specified by the OpenTelemetry specification for
-// a span on the server side. Currently, only basic authentication is
-// supported.
 func HTTPServerAttributesFromHTTPRequest(serverName, route string, request *http.Request) []attribute.KeyValue {
-	return sc.HTTPServerAttributesFromHTTPRequest(serverName, route, request)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// HTTPAttributesFromHTTPStatusCode generates attributes of the http
-// namespace as specified by the OpenTelemetry specification for a
-// span.
 func HTTPAttributesFromHTTPStatusCode(code int) []attribute.KeyValue {
-	return sc.HTTPAttributesFromHTTPStatusCode(code)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// SpanStatusFromHTTPStatusCode generates a status code and a message
-// as specified by the OpenTelemetry specification for a span.
 func SpanStatusFromHTTPStatusCode(code int) (codes.Code, string) {
-	return internal.SpanStatusFromHTTPStatusCode(code)
+	_ = "STUB: not implemented"
+	return *new(codes.Code), ""
 }
 
-// SpanStatusFromHTTPStatusCodeAndSpanKind generates a status code and a message
-// as specified by the OpenTelemetry specification for a span.
-// Exclude 4xx for SERVER to set the appropriate status.
 func SpanStatusFromHTTPStatusCodeAndSpanKind(code int, spanKind trace.SpanKind) (codes.Code, string) {
-	return internal.SpanStatusFromHTTPStatusCodeAndSpanKind(code, spanKind)
+	_ = "STUB: not implemented"
+	return *new(codes.Code), ""
 }

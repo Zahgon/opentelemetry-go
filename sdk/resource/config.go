@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package resource
 
 import (
@@ -9,25 +6,19 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// config contains configuration for Resource creation.
 type config struct {
-	// detectors that will be evaluated.
 	detectors []Detector
-	// SchemaURL to associate with the Resource.
+
 	schemaURL string
 }
 
-// Option is the interface that applies a configuration option.
 type Option interface {
-	// apply sets the Option value of a config.
 	apply(config) config
 }
 
-// WithAttributes adds attributes to the configured Resource. Duplicate
-// top-level attribute keys and duplicate keys inside map values are
-// resolved using last-value-wins semantics.
 func WithAttributes(attributes ...attribute.KeyValue) Option {
-	return WithDetectors(detectAttributes{attributes})
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 type detectAttributes struct {
@@ -35,171 +26,58 @@ type detectAttributes struct {
 }
 
 func (d detectAttributes) Detect(context.Context) (*Resource, error) {
-	return NewSchemaless(d.attributes...), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// WithDetectors adds detectors to be evaluated for the configured resource.
-func WithDetectors(detectors ...Detector) Option {
-	return detectorsOption{detectors: detectors}
-}
+func WithDetectors(detectors ...Detector) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type detectorsOption struct {
 	detectors []Detector
 }
 
-func (o detectorsOption) apply(cfg config) config {
-	cfg.detectors = append(cfg.detectors, o.detectors...)
-	return cfg
-}
+func (o detectorsOption) apply(cfg config) config { _ = "STUB: not implemented"; return *new(config) }
 
-// WithFromEnv adds attributes from environment variables to the configured resource.
-func WithFromEnv() Option {
-	return WithDetectors(fromEnv{})
-}
+func WithFromEnv() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithHost adds attributes from the host to the configured resource.
-func WithHost() Option {
-	return WithDetectors(host{})
-}
+func WithHost() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithHostID adds host ID information to the configured resource.
-func WithHostID() Option {
-	return WithDetectors(hostIDDetector{})
-}
+func WithHostID() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithTelemetrySDK adds TelemetrySDK version info to the configured resource.
-func WithTelemetrySDK() Option {
-	return WithDetectors(telemetrySDK{})
-}
+func WithTelemetrySDK() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithSchemaURL sets the schema URL for the configured resource.
-func WithSchemaURL(schemaURL string) Option {
-	return schemaURLOption(schemaURL)
-}
+func WithSchemaURL(schemaURL string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 type schemaURLOption string
 
-func (o schemaURLOption) apply(cfg config) config {
-	cfg.schemaURL = string(o)
-	return cfg
-}
+func (o schemaURLOption) apply(cfg config) config { _ = "STUB: not implemented"; return *new(config) }
 
-// WithOS adds all the OS attributes to the configured Resource.
-// See individual WithOS* functions to configure specific attributes.
-func WithOS() Option {
-	return WithDetectors(
-		osTypeDetector{},
-		osDescriptionDetector{},
-	)
-}
+func WithOS() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithOSType adds an attribute with the operating system type to the configured Resource.
-func WithOSType() Option {
-	return WithDetectors(osTypeDetector{})
-}
+func WithOSType() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithOSDescription adds an attribute with the operating system description to the
-// configured Resource. The formatted string is equivalent to the output of the
-// `uname -snrvm` command.
-func WithOSDescription() Option {
-	return WithDetectors(osDescriptionDetector{})
-}
+func WithOSDescription() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcess adds all the Process attributes to the configured Resource.
-//
-// Warning! This option will include process command line arguments. If these
-// contain sensitive information it will be included in the exported resource.
-//
-// This option is equivalent to calling WithProcessPID,
-// WithProcessExecutableName, WithProcessExecutablePath,
-// WithProcessCommandArgs, WithProcessOwner, WithProcessRuntimeName,
-// WithProcessRuntimeVersion, and WithProcessRuntimeDescription. See each
-// option function for information about what resource attributes each
-// includes.
-func WithProcess() Option {
-	return WithDetectors(
-		processPIDDetector{},
-		processExecutableNameDetector{},
-		processExecutablePathDetector{},
-		processCommandArgsDetector{},
-		processOwnerDetector{},
-		processRuntimeNameDetector{},
-		processRuntimeVersionDetector{},
-		processRuntimeDescriptionDetector{},
-	)
-}
+func WithProcess() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessPID adds an attribute with the process identifier (PID) to the
-// configured Resource.
-func WithProcessPID() Option {
-	return WithDetectors(processPIDDetector{})
-}
+func WithProcessPID() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessExecutableName adds an attribute with the name of the process
-// executable to the configured Resource.
-func WithProcessExecutableName() Option {
-	return WithDetectors(processExecutableNameDetector{})
-}
+func WithProcessExecutableName() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessExecutablePath adds an attribute with the full path to the process
-// executable to the configured Resource.
-func WithProcessExecutablePath() Option {
-	return WithDetectors(processExecutablePathDetector{})
-}
+func WithProcessExecutablePath() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessCommandArgs adds an attribute with all the command arguments (including
-// the command/executable itself) as received by the process to the configured
-// Resource.
-//
-// Warning! This option will include process command line arguments. If these
-// contain sensitive information it will be included in the exported resource.
-func WithProcessCommandArgs() Option {
-	return WithDetectors(processCommandArgsDetector{})
-}
+func WithProcessCommandArgs() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessOwner adds an attribute with the username of the user that owns the process
-// to the configured Resource.
-func WithProcessOwner() Option {
-	return WithDetectors(processOwnerDetector{})
-}
+func WithProcessOwner() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessRuntimeName adds an attribute with the name of the runtime of this
-// process to the configured Resource.
-func WithProcessRuntimeName() Option {
-	return WithDetectors(processRuntimeNameDetector{})
-}
+func WithProcessRuntimeName() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessRuntimeVersion adds an attribute with the version of the runtime of
-// this process to the configured Resource.
-func WithProcessRuntimeVersion() Option {
-	return WithDetectors(processRuntimeVersionDetector{})
-}
+func WithProcessRuntimeVersion() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithProcessRuntimeDescription adds an attribute with an additional description
-// about the runtime of the process to the configured Resource.
-func WithProcessRuntimeDescription() Option {
-	return WithDetectors(processRuntimeDescriptionDetector{})
-}
+func WithProcessRuntimeDescription() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithContainer adds all the Container attributes to the configured Resource.
-// See individual WithContainer* functions to configure specific attributes.
-func WithContainer() Option {
-	return WithDetectors(
-		cgroupContainerIDDetector{},
-	)
-}
+func WithContainer() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithContainerID adds an attribute with the id of the container to the configured Resource.
-// Note: WithContainerID will not extract the correct container ID in an ECS environment.
-// Please use the ECS resource detector instead (https://pkg.go.dev/go.opentelemetry.io/contrib/detectors/aws/ecs).
-func WithContainerID() Option {
-	return WithDetectors(cgroupContainerIDDetector{})
-}
+func WithContainerID() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-// WithService adds all the Service attributes to the configured Resource.
-func WithService() Option {
-	return WithDetectors(
-		defaultServiceInstanceIDDetector{},
-		defaultServiceNameDetector{},
-	)
-}
+func WithService() Option { _ = "STUB: not implemented"; return *new(Option) }

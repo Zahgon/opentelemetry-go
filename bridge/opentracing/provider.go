@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package opentracing
 
 import (
@@ -11,8 +8,6 @@ import (
 	"go.opentelemetry.io/otel/trace/embedded"
 )
 
-// TracerProvider is an OpenTelemetry TracerProvider that wraps an OpenTracing
-// Tracer.
 type TracerProvider struct {
 	embedded.TracerProvider
 
@@ -25,15 +20,9 @@ type TracerProvider struct {
 
 var _ trace.TracerProvider = (*TracerProvider)(nil)
 
-// NewTracerProvider returns a new TracerProvider that creates new instances of
-// WrapperTracer from the given TracerProvider.
 func NewTracerProvider(bridge *BridgeTracer, provider trace.TracerProvider) *TracerProvider {
-	return &TracerProvider{
-		bridge:   bridge,
-		provider: provider,
-
-		tracers: make(map[wrappedTracerKey]*WrapperTracer),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type wrappedTracerKey struct {
@@ -43,26 +32,7 @@ type wrappedTracerKey struct {
 	attrs   attribute.Set
 }
 
-// Tracer creates a WrappedTracer that wraps the OpenTelemetry tracer for each call to
-// Tracer(). Repeated calls to Tracer() with the same configuration will look up and
-// return an existing instance of WrapperTracer.
 func (p *TracerProvider) Tracer(name string, opts ...trace.TracerOption) trace.Tracer {
-	p.mtx.Lock()
-	defer p.mtx.Unlock()
-
-	c := trace.NewTracerConfig(opts...)
-	key := wrappedTracerKey{
-		name:    name,
-		version: c.InstrumentationVersion(),
-		schema:  c.SchemaURL(),
-		attrs:   c.InstrumentationAttributes(),
-	}
-
-	if t, ok := p.tracers[key]; ok {
-		return t
-	}
-
-	wrapper := NewWrapperTracer(p.bridge, p.provider.Tracer(name, opts...))
-	p.tracers[key] = wrapper
-	return wrapper
+	_ = "STUB: not implemented"
+	return *new(trace.Tracer)
 }

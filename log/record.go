@@ -1,25 +1,14 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package log
 
 import (
-	"slices"
 	"time"
 
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// attributesInlineCount is the number of attributes that are efficiently
-// stored in an array within a Record. This value is borrowed from slog which
-// performed a quantitative survey of log library use and found this value to
-// cover 95% of all use-cases (https://go.dev/blog/slog#performance).
 const attributesInlineCount = 5
 
-// Record represents a log record.
-// A log record with non-empty event name is interpreted as an event record.
 type Record struct {
-	// Ensure forward compatibility by explicitly making this not comparable.
 	noCmp [0]func() //nolint: unused  // This is indeed used.
 
 	eventName         string
@@ -30,137 +19,45 @@ type Record struct {
 	body              attribute.Value
 	err               error
 
-	// The fields below are for optimizing the implementation of Attributes and
-	// AddAttributes. This design is borrowed from the slog Record type:
-	// https://cs.opensource.google/go/go/+/refs/tags/go1.22.0:src/log/slog/record.go;l=20
-
-	// Allocation optimization: an inline array sized to hold
-	// the majority of log calls (based on examination of open-source
-	// code). It holds the start of the list of attributes.
 	front [attributesInlineCount]attribute.KeyValue
 
-	// The number of attributes in front.
 	nFront int
 
-	// The list of attributes except for those in front.
-	// Invariants:
-	//   - len(back) > 0 if nFront == len(front)
-	//   - Unused array elements are zero-ed. Used to detect mistakes.
 	back []attribute.KeyValue
 }
 
-// EventName returns the event name.
-// A log record with non-empty event name is interpreted as an event record.
-func (r *Record) EventName() string {
-	return r.eventName
-}
+func (r *Record) EventName() string { _ = "STUB: not implemented"; return "" }
 
-// SetEventName sets the event name.
-// A log record with non-empty event name is interpreted as an event record.
-// Event names should uniquely identify the event's attribute and body structure.
-func (r *Record) SetEventName(s string) {
-	r.eventName = s
-}
+func (r *Record) SetEventName(s string) { _ = "STUB: not implemented"; return }
 
-// Timestamp returns the time when the log record occurred.
-func (r *Record) Timestamp() time.Time {
-	return r.timestamp
-}
+func (r *Record) Timestamp() time.Time { _ = "STUB: not implemented"; return *new(time.Time) }
 
-// SetTimestamp sets the time when the log record occurred.
-func (r *Record) SetTimestamp(t time.Time) {
-	r.timestamp = t
-}
+func (r *Record) SetTimestamp(t time.Time) { _ = "STUB: not implemented"; return }
 
-// ObservedTimestamp returns the time when the log record was observed.
-func (r *Record) ObservedTimestamp() time.Time {
-	return r.observedTimestamp
-}
+func (r *Record) ObservedTimestamp() time.Time { _ = "STUB: not implemented"; return *new(time.Time) }
 
-// SetObservedTimestamp sets the time when the log record was observed.
-func (r *Record) SetObservedTimestamp(t time.Time) {
-	r.observedTimestamp = t
-}
+func (r *Record) SetObservedTimestamp(t time.Time) { _ = "STUB: not implemented"; return }
 
-// Severity returns the [Severity] of the log record.
-func (r *Record) Severity() Severity {
-	return r.severity
-}
+func (r *Record) Severity() Severity { _ = "STUB: not implemented"; return *new(Severity) }
 
-// SetSeverity sets the [Severity] level of the log record.
-func (r *Record) SetSeverity(level Severity) {
-	r.severity = level
-}
+func (r *Record) SetSeverity(level Severity) { _ = "STUB: not implemented"; return }
 
-// SeverityText returns severity (also known as log level) text. This is the
-// original string representation of the severity as it is known at the source.
-func (r *Record) SeverityText() string {
-	return r.severityText
-}
+func (r *Record) SeverityText() string { _ = "STUB: not implemented"; return "" }
 
-// SetSeverityText sets severity (also known as log level) text. This is the
-// original string representation of the severity as it is known at the source.
-func (r *Record) SetSeverityText(text string) {
-	r.severityText = text
-}
+func (r *Record) SetSeverityText(text string) { _ = "STUB: not implemented"; return }
 
-// Body returns the body of the log record.
-func (r *Record) Body() attribute.Value {
-	return r.body
-}
+func (r *Record) Body() attribute.Value { _ = "STUB: not implemented"; return *new(attribute.Value) }
 
-// SetBody sets the body of the log record.
-func (r *Record) SetBody(v attribute.Value) {
-	r.body = v
-}
+func (r *Record) SetBody(v attribute.Value) { _ = "STUB: not implemented"; return }
 
-// Err returns the associated error if one has been set.
-func (r *Record) Err() error {
-	return r.err
-}
+func (r *Record) Err() error { _ = "STUB: not implemented"; return nil }
 
-// SetErr sets the associated error. Passing nil clears the error.
-func (r *Record) SetErr(err error) {
-	r.err = err
-}
+func (r *Record) SetErr(err error) { _ = "STUB: not implemented"; return }
 
-// WalkAttributes walks all attributes the log record holds by calling f for
-// each on each [attribute.KeyValue] in the [Record]. Iteration stops if f returns false.
-func (r *Record) WalkAttributes(f func(attribute.KeyValue) bool) {
-	for i := 0; i < r.nFront; i++ {
-		if !f(r.front[i]) {
-			return
-		}
-	}
-	for _, a := range r.back {
-		if !f(a) {
-			return
-		}
-	}
-}
+func (r *Record) WalkAttributes(f func(attribute.KeyValue) bool) { _ = "STUB: not implemented"; return }
 
-// AddAttributes adds attributes to the log record.
-func (r *Record) AddAttributes(attrs ...attribute.KeyValue) {
-	var i int
-	for i = 0; i < len(attrs) && r.nFront < len(r.front); i++ {
-		a := attrs[i]
-		r.front[r.nFront] = a
-		r.nFront++
-	}
+func (r *Record) AddAttributes(attrs ...attribute.KeyValue) { _ = "STUB: not implemented"; return }
 
-	r.back = slices.Grow(r.back, len(attrs[i:]))
-	r.back = append(r.back, attrs[i:]...)
-}
+func (r *Record) AttributesLen() int { _ = "STUB: not implemented"; return 0 }
 
-// AttributesLen returns the number of attributes in the log record.
-func (r *Record) AttributesLen() int {
-	return r.nFront + len(r.back)
-}
-
-// Clone returns a copy of the record with no shared state.
-// The original record and the clone can both be modified without interfering with each other.
-func (r *Record) Clone() Record {
-	res := *r
-	res.back = slices.Clone(r.back)
-	return res
-}
+func (r *Record) Clone() Record { _ = "STUB: not implemented"; return *new(Record) }

@@ -1,6 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package migration
 
 import (
@@ -14,15 +11,9 @@ var (
 	doDeferredContextSetupTypeValue = doDeferredContextSetupType{}
 )
 
-// WithDeferredSetup returns a context that can tell the OpenTelemetry
-// tracer to skip the context setup in the Start() function.
 func WithDeferredSetup(ctx context.Context) context.Context {
-	return context.WithValue(ctx, doDeferredContextSetupTypeKey, doDeferredContextSetupTypeValue)
+	_ = "STUB: not implemented"
+	return *new(context.Context)
 }
 
-// SkipContextSetup can tell the OpenTelemetry tracer to skip the
-// context setup during the span creation in the Start() function.
-func SkipContextSetup(ctx context.Context) bool {
-	_, ok := ctx.Value(doDeferredContextSetupTypeKey).(doDeferredContextSetupType)
-	return ok
-}
+func SkipContextSetup(ctx context.Context) bool { _ = "STUB: not implemented"; return false }

@@ -1,10 +1,3 @@
-// Code generated from semantic convention specification. DO NOT EDIT.
-
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package containerconv provides types and functionality for OpenTelemetry semantic
-// conventions in the "container" namespace.
 package containerconv
 
 import (
@@ -13,7 +6,6 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/noop"
 )
 
 var (
@@ -21,59 +13,42 @@ var (
 	recOptPool = &sync.Pool{New: func() any { return &[]metric.RecordOption{} }}
 )
 
-// CPUModeAttr is an attribute conforming to the cpu.mode semantic conventions.
-// It represents the CPU mode for this data point. A container's CPU metric
-// SHOULD be characterized *either* by data points with no `mode` labels,
-// *or only* data points with `mode` labels.
 type CPUModeAttr string
 
 var (
-	// CPUModeUser is the user.
 	CPUModeUser CPUModeAttr = "user"
-	// CPUModeSystem is the system.
+
 	CPUModeSystem CPUModeAttr = "system"
-	// CPUModeNice is the nice.
+
 	CPUModeNice CPUModeAttr = "nice"
-	// CPUModeIdle is the idle.
+
 	CPUModeIdle CPUModeAttr = "idle"
-	// CPUModeIOWait is the IO Wait.
+
 	CPUModeIOWait CPUModeAttr = "iowait"
-	// CPUModeInterrupt is the interrupt.
+
 	CPUModeInterrupt CPUModeAttr = "interrupt"
-	// CPUModeSteal is the steal.
+
 	CPUModeSteal CPUModeAttr = "steal"
-	// CPUModeKernel is the kernel.
+
 	CPUModeKernel CPUModeAttr = "kernel"
 )
 
-// DiskIODirectionAttr is an attribute conforming to the disk.io.direction
-// semantic conventions. It represents the disk IO operation direction.
 type DiskIODirectionAttr string
 
 var (
-	// DiskIODirectionRead is the standardized value "read" of DiskIODirectionAttr.
 	DiskIODirectionRead DiskIODirectionAttr = "read"
-	// DiskIODirectionWrite is the standardized value "write" of
-	// DiskIODirectionAttr.
+
 	DiskIODirectionWrite DiskIODirectionAttr = "write"
 )
 
-// NetworkIODirectionAttr is an attribute conforming to the network.io.direction
-// semantic conventions. It represents the network IO operation direction.
 type NetworkIODirectionAttr string
 
 var (
-	// NetworkIODirectionTransmit is the standardized value "transmit" of
-	// NetworkIODirectionAttr.
 	NetworkIODirectionTransmit NetworkIODirectionAttr = "transmit"
-	// NetworkIODirectionReceive is the standardized value "receive" of
-	// NetworkIODirectionAttr.
+
 	NetworkIODirectionReceive NetworkIODirectionAttr = "receive"
 )
 
-// CPUTime is an instrument used to record metric values conforming to the
-// "container.cpu.time" semantic conventions. It represents the total CPU time
-// consumed.
 type CPUTime struct {
 	metric.Float64Counter
 }
@@ -83,113 +58,44 @@ var newCPUTimeOpts = []metric.Float64CounterOption{
 	metric.WithUnit("s"),
 }
 
-// NewCPUTime returns a new CPUTime instrument.
 func NewCPUTime(
 	m metric.Meter,
 	opt ...metric.Float64CounterOption,
 ) (CPUTime, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return CPUTime{noop.Float64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newCPUTimeOpts
-	} else {
-		opt = append(opt, newCPUTimeOpts...)
-	}
-
-	i, err := m.Float64Counter(
-		"container.cpu.time",
-		opt...,
-	)
-	if err != nil {
-		return CPUTime{noop.Float64Counter{}}, err
-	}
-	return CPUTime{i}, nil
+	_ = "STUB: not implemented"
+	return *new(CPUTime), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m CPUTime) Inst() metric.Float64Counter {
-	return m.Float64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (CPUTime) Name() string {
-	return "container.cpu.time"
-}
+func (CPUTime) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (CPUTime) Unit() string {
-	return "s"
-}
+func (CPUTime) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (CPUTime) Description() string {
-	return "Total CPU time consumed."
-}
+func (CPUTime) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// Total CPU time consumed by the specific container on all available CPU cores
 func (m CPUTime) Add(
 	ctx context.Context,
 	incr float64,
 	attrs ...attribute.KeyValue,
 ) {
-	if len(attrs) == 0 {
-		m.Float64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			attrs...,
-		),
-	)
-
-	m.Float64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// Total CPU time consumed by the specific container on all available CPU cores
 func (m CPUTime) AddSet(ctx context.Context, incr float64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Float64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrCPUMode returns an optional attribute for the "cpu.mode" semantic
-// convention. It represents the CPU mode for this data point. A container's CPU
-// metric SHOULD be characterized *either* by data points with no `mode` labels,
-// *or only* data points with `mode` labels.
 func (CPUTime) AttrCPUMode(val CPUModeAttr) attribute.KeyValue {
-	return attribute.String("cpu.mode", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// CPUUsage is an instrument used to record metric values conforming to the
-// "container.cpu.usage" semantic conventions. It represents the container's CPU
-// usage, measured in cpus. Range from 0 to the number of allocatable CPUs.
 type CPUUsage struct {
 	metric.Int64Gauge
 }
@@ -199,115 +105,44 @@ var newCPUUsageOpts = []metric.Int64GaugeOption{
 	metric.WithUnit("{cpu}"),
 }
 
-// NewCPUUsage returns a new CPUUsage instrument.
 func NewCPUUsage(
 	m metric.Meter,
 	opt ...metric.Int64GaugeOption,
 ) (CPUUsage, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return CPUUsage{noop.Int64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newCPUUsageOpts
-	} else {
-		opt = append(opt, newCPUUsageOpts...)
-	}
-
-	i, err := m.Int64Gauge(
-		"container.cpu.usage",
-		opt...,
-	)
-	if err != nil {
-		return CPUUsage{noop.Int64Gauge{}}, err
-	}
-	return CPUUsage{i}, nil
+	_ = "STUB: not implemented"
+	return *new(CPUUsage), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m CPUUsage) Inst() metric.Int64Gauge {
-	return m.Int64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (CPUUsage) Name() string {
-	return "container.cpu.usage"
-}
+func (CPUUsage) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (CPUUsage) Unit() string {
-	return "{cpu}"
-}
+func (CPUUsage) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (CPUUsage) Description() string {
-	return "Container's CPU usage, measured in cpus. Range from 0 to the number of allocatable CPUs."
-}
+func (CPUUsage) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// CPU usage of the specific container on all available CPU cores, averaged over
-// the sample window
 func (m CPUUsage) Record(
 	ctx context.Context,
 	val int64,
 	attrs ...attribute.KeyValue,
 ) {
-	if len(attrs) == 0 {
-		m.Int64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := recOptPool.Get().(*[]metric.RecordOption)
-	defer func() {
-		*o = (*o)[:0]
-		recOptPool.Put(o)
-	}()
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			attrs...,
-		),
-	)
-
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// CPU usage of the specific container on all available CPU cores, averaged over
-// the sample window
 func (m CPUUsage) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := recOptPool.Get().(*[]metric.RecordOption)
-	defer func() {
-		*o = (*o)[:0]
-		recOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrCPUMode returns an optional attribute for the "cpu.mode" semantic
-// convention. It represents the CPU mode for this data point. A container's CPU
-// metric SHOULD be characterized *either* by data points with no `mode` labels,
-// *or only* data points with `mode` labels.
 func (CPUUsage) AttrCPUMode(val CPUModeAttr) attribute.KeyValue {
-	return attribute.String("cpu.mode", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// DiskIO is an instrument used to record metric values conforming to the
-// "container.disk.io" semantic conventions. It represents the disk bytes for the
-// container.
 type DiskIO struct {
 	metric.Int64Counter
 }
@@ -317,119 +152,49 @@ var newDiskIOOpts = []metric.Int64CounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewDiskIO returns a new DiskIO instrument.
 func NewDiskIO(
 	m metric.Meter,
 	opt ...metric.Int64CounterOption,
 ) (DiskIO, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return DiskIO{noop.Int64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newDiskIOOpts
-	} else {
-		opt = append(opt, newDiskIOOpts...)
-	}
-
-	i, err := m.Int64Counter(
-		"container.disk.io",
-		opt...,
-	)
-	if err != nil {
-		return DiskIO{noop.Int64Counter{}}, err
-	}
-	return DiskIO{i}, nil
+	_ = "STUB: not implemented"
+	return *new(DiskIO), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m DiskIO) Inst() metric.Int64Counter {
-	return m.Int64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (DiskIO) Name() string {
-	return "container.disk.io"
-}
+func (DiskIO) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (DiskIO) Unit() string {
-	return "By"
-}
+func (DiskIO) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (DiskIO) Description() string {
-	return "Disk bytes for the container."
-}
+func (DiskIO) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// The total number of bytes read/written successfully (aggregated from all
-// disks).
 func (m DiskIO) Add(
 	ctx context.Context,
 	incr int64,
 	attrs ...attribute.KeyValue,
 ) {
-	if len(attrs) == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			attrs...,
-		),
-	)
-
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// The total number of bytes read/written successfully (aggregated from all
-// disks).
 func (m DiskIO) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrDiskIODirection returns an optional attribute for the "disk.io.direction"
-// semantic convention. It represents the disk IO operation direction.
 func (DiskIO) AttrDiskIODirection(val DiskIODirectionAttr) attribute.KeyValue {
-	return attribute.String("disk.io.direction", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrSystemDevice returns an optional attribute for the "system.device"
-// semantic convention. It represents the device identifier.
 func (DiskIO) AttrSystemDevice(val string) attribute.KeyValue {
-	return attribute.String("system.device", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// FilesystemAvailable is an instrument used to record metric values conforming
-// to the "container.filesystem.available" semantic conventions. It represents
-// the container filesystem available bytes.
 type FilesystemAvailable struct {
 	metric.Int64UpDownCounter
 }
@@ -439,105 +204,35 @@ var newFilesystemAvailableOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewFilesystemAvailable returns a new FilesystemAvailable instrument.
 func NewFilesystemAvailable(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (FilesystemAvailable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return FilesystemAvailable{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newFilesystemAvailableOpts
-	} else {
-		opt = append(opt, newFilesystemAvailableOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"container.filesystem.available",
-		opt...,
-	)
-	if err != nil {
-		return FilesystemAvailable{noop.Int64UpDownCounter{}}, err
-	}
-	return FilesystemAvailable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(FilesystemAvailable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m FilesystemAvailable) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (FilesystemAvailable) Name() string {
-	return "container.filesystem.available"
-}
+func (FilesystemAvailable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (FilesystemAvailable) Unit() string {
-	return "By"
-}
+func (FilesystemAvailable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (FilesystemAvailable) Description() string {
-	return "Container filesystem available bytes."
-}
+func (FilesystemAvailable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// In K8s, this metric is derived from the
-// [FsStats.AvailableBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.AvailableBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemAvailable) Add(ctx context.Context, incr int64, attrs ...attribute.KeyValue) {
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributes(attrs...))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// In K8s, this metric is derived from the
-// [FsStats.AvailableBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.AvailableBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemAvailable) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// FilesystemCapacity is an instrument used to record metric values conforming to
-// the "container.filesystem.capacity" semantic conventions. It represents the
-// container filesystem capacity.
 type FilesystemCapacity struct {
 	metric.Int64UpDownCounter
 }
@@ -547,105 +242,35 @@ var newFilesystemCapacityOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewFilesystemCapacity returns a new FilesystemCapacity instrument.
 func NewFilesystemCapacity(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (FilesystemCapacity, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return FilesystemCapacity{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newFilesystemCapacityOpts
-	} else {
-		opt = append(opt, newFilesystemCapacityOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"container.filesystem.capacity",
-		opt...,
-	)
-	if err != nil {
-		return FilesystemCapacity{noop.Int64UpDownCounter{}}, err
-	}
-	return FilesystemCapacity{i}, nil
+	_ = "STUB: not implemented"
+	return *new(FilesystemCapacity), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m FilesystemCapacity) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (FilesystemCapacity) Name() string {
-	return "container.filesystem.capacity"
-}
+func (FilesystemCapacity) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (FilesystemCapacity) Unit() string {
-	return "By"
-}
+func (FilesystemCapacity) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (FilesystemCapacity) Description() string {
-	return "Container filesystem capacity."
-}
+func (FilesystemCapacity) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// In K8s, this metric is derived from the
-// [FsStats.CapacityBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.CapacityBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemCapacity) Add(ctx context.Context, incr int64, attrs ...attribute.KeyValue) {
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributes(attrs...))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// In K8s, this metric is derived from the
-// [FsStats.CapacityBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.CapacityBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemCapacity) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// FilesystemUsage is an instrument used to record metric values conforming to
-// the "container.filesystem.usage" semantic conventions. It represents the
-// container filesystem usage.
 type FilesystemUsage struct {
 	metric.Int64UpDownCounter
 }
@@ -655,109 +280,35 @@ var newFilesystemUsageOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewFilesystemUsage returns a new FilesystemUsage instrument.
 func NewFilesystemUsage(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (FilesystemUsage, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return FilesystemUsage{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newFilesystemUsageOpts
-	} else {
-		opt = append(opt, newFilesystemUsageOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"container.filesystem.usage",
-		opt...,
-	)
-	if err != nil {
-		return FilesystemUsage{noop.Int64UpDownCounter{}}, err
-	}
-	return FilesystemUsage{i}, nil
+	_ = "STUB: not implemented"
+	return *new(FilesystemUsage), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m FilesystemUsage) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (FilesystemUsage) Name() string {
-	return "container.filesystem.usage"
-}
+func (FilesystemUsage) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (FilesystemUsage) Unit() string {
-	return "By"
-}
+func (FilesystemUsage) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (FilesystemUsage) Description() string {
-	return "Container filesystem usage."
-}
+func (FilesystemUsage) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// This may not equal capacity - available.
-//
-// In K8s, this metric is derived from the
-// [FsStats.UsedBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.UsedBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemUsage) Add(ctx context.Context, incr int64, attrs ...attribute.KeyValue) {
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributes(attrs...))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// This may not equal capacity - available.
-//
-// In K8s, this metric is derived from the
-// [FsStats.UsedBytes] field
-// of the [ContainerStats.Rootfs]
-// of the Kubelet's stats API.
-//
-// [FsStats.UsedBytes]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#FsStats
-// [ContainerStats.Rootfs]: https://pkg.go.dev/k8s.io/kubelet@v0.33.0/pkg/apis/stats/v1alpha1#ContainerStats
 func (m FilesystemUsage) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// MemoryUsage is an instrument used to record metric values conforming to the
-// "container.memory.usage" semantic conventions. It represents the memory usage
-// of the container.
 type MemoryUsage struct {
 	metric.Int64Counter
 }
@@ -767,93 +318,35 @@ var newMemoryUsageOpts = []metric.Int64CounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewMemoryUsage returns a new MemoryUsage instrument.
 func NewMemoryUsage(
 	m metric.Meter,
 	opt ...metric.Int64CounterOption,
 ) (MemoryUsage, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return MemoryUsage{noop.Int64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newMemoryUsageOpts
-	} else {
-		opt = append(opt, newMemoryUsageOpts...)
-	}
-
-	i, err := m.Int64Counter(
-		"container.memory.usage",
-		opt...,
-	)
-	if err != nil {
-		return MemoryUsage{noop.Int64Counter{}}, err
-	}
-	return MemoryUsage{i}, nil
+	_ = "STUB: not implemented"
+	return *new(MemoryUsage), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m MemoryUsage) Inst() metric.Int64Counter {
-	return m.Int64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (MemoryUsage) Name() string {
-	return "container.memory.usage"
-}
+func (MemoryUsage) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (MemoryUsage) Unit() string {
-	return "By"
-}
+func (MemoryUsage) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (MemoryUsage) Description() string {
-	return "Memory usage of the container."
-}
+func (MemoryUsage) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// Memory usage of the container.
 func (m MemoryUsage) Add(ctx context.Context, incr int64, attrs ...attribute.KeyValue) {
-	if len(attrs) == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributes(attrs...))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// Memory usage of the container.
 func (m MemoryUsage) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// NetworkIO is an instrument used to record metric values conforming to the
-// "container.network.io" semantic conventions. It represents the network bytes
-// for the container.
 type NetworkIO struct {
 	metric.Int64Counter
 }
@@ -863,119 +356,49 @@ var newNetworkIOOpts = []metric.Int64CounterOption{
 	metric.WithUnit("By"),
 }
 
-// NewNetworkIO returns a new NetworkIO instrument.
 func NewNetworkIO(
 	m metric.Meter,
 	opt ...metric.Int64CounterOption,
 ) (NetworkIO, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return NetworkIO{noop.Int64Counter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newNetworkIOOpts
-	} else {
-		opt = append(opt, newNetworkIOOpts...)
-	}
-
-	i, err := m.Int64Counter(
-		"container.network.io",
-		opt...,
-	)
-	if err != nil {
-		return NetworkIO{noop.Int64Counter{}}, err
-	}
-	return NetworkIO{i}, nil
+	_ = "STUB: not implemented"
+	return *new(NetworkIO), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m NetworkIO) Inst() metric.Int64Counter {
-	return m.Int64Counter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Counter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (NetworkIO) Name() string {
-	return "container.network.io"
-}
+func (NetworkIO) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (NetworkIO) Unit() string {
-	return "By"
-}
+func (NetworkIO) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (NetworkIO) Description() string {
-	return "Network bytes for the container."
-}
+func (NetworkIO) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// The number of bytes sent/received on all network interfaces by the container.
 func (m NetworkIO) Add(
 	ctx context.Context,
 	incr int64,
 	attrs ...attribute.KeyValue,
 ) {
-	if len(attrs) == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			attrs...,
-		),
-	)
-
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
-//
-// The number of bytes sent/received on all network interfaces by the container.
 func (m NetworkIO) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Int64Counter.Add(ctx, incr)
-		return
-	}
-
-	o := addOptPool.Get().(*[]metric.AddOption)
-	defer func() {
-		*o = (*o)[:0]
-		addOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Counter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrNetworkInterfaceName returns an optional attribute for the
-// "network.interface.name" semantic convention. It represents the network
-// interface name.
 func (NetworkIO) AttrNetworkInterfaceName(val string) attribute.KeyValue {
-	return attribute.String("network.interface.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkIODirection returns an optional attribute for the
-// "network.io.direction" semantic convention. It represents the network IO
-// operation direction.
 func (NetworkIO) AttrNetworkIODirection(val NetworkIODirectionAttr) attribute.KeyValue {
-	return attribute.String("network.io.direction", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// Uptime is an instrument used to record metric values conforming to the
-// "container.uptime" semantic conventions. It represents the time the container
-// has been running.
 type Uptime struct {
 	metric.Float64Gauge
 }
@@ -985,90 +408,31 @@ var newUptimeOpts = []metric.Float64GaugeOption{
 	metric.WithUnit("s"),
 }
 
-// NewUptime returns a new Uptime instrument.
 func NewUptime(
 	m metric.Meter,
 	opt ...metric.Float64GaugeOption,
 ) (Uptime, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return Uptime{noop.Float64Gauge{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newUptimeOpts
-	} else {
-		opt = append(opt, newUptimeOpts...)
-	}
-
-	i, err := m.Float64Gauge(
-		"container.uptime",
-		opt...,
-	)
-	if err != nil {
-		return Uptime{noop.Float64Gauge{}}, err
-	}
-	return Uptime{i}, nil
+	_ = "STUB: not implemented"
+	return *new(Uptime), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m Uptime) Inst() metric.Float64Gauge {
-	return m.Float64Gauge
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Gauge)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (Uptime) Name() string {
-	return "container.uptime"
-}
+func (Uptime) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (Uptime) Unit() string {
-	return "s"
-}
+func (Uptime) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (Uptime) Description() string {
-	return "The time the container has been running."
-}
+func (Uptime) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// Instrumentations SHOULD use a gauge with type `double` and measure uptime in
-// seconds as a floating point number with the highest precision available.
-// The actual accuracy would depend on the instrumentation and operating system.
 func (m Uptime) Record(ctx context.Context, val float64, attrs ...attribute.KeyValue) {
-	if len(attrs) == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := recOptPool.Get().(*[]metric.RecordOption)
-	defer func() {
-		*o = (*o)[:0]
-		recOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributes(attrs...))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// Instrumentations SHOULD use a gauge with type `double` and measure uptime in
-// seconds as a floating point number with the highest precision available.
-// The actual accuracy would depend on the instrumentation and operating system.
 func (m Uptime) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if set.Len() == 0 {
-		m.Float64Gauge.Record(ctx, val)
-		return
-	}
-
-	o := recOptPool.Get().(*[]metric.RecordOption)
-	defer func() {
-		*o = (*o)[:0]
-		recOptPool.Put(o)
-	}()
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Gauge.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }

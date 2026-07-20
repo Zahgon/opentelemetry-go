@@ -1,13 +1,7 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package logtest is a testing helper package.
 package logtest
 
 import (
-	"reflect"
 	"time"
-	"unsafe"
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/log"
@@ -17,11 +11,6 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// RecordFactory is used to facilitate unit testing implementations of
-// [go.opentelemetry.io/otel/sdk/log.Exporter]
-// and [go.opentelemetry.io/otel/sdk/log.Processor].
-//
-// Do not use RecordFactory to create records in production code.
 type RecordFactory struct {
 	EventName         string
 	Timestamp         time.Time
@@ -40,39 +29,9 @@ type RecordFactory struct {
 	DroppedAttributes int
 }
 
-// NewRecord returns a [sdklog.Record] configured from the values of f.
 func (f RecordFactory) NewRecord() sdklog.Record {
-	// r needs to be addressable for set() below.
-	r := new(sdklog.Record)
-
-	// Set to unlimited so attributes are set exactly and later test mutations
-	// do not inherit the zero-value Record's truncation behavior.
-	set(r, "attributeCountLimit", -1)
-	set(r, "attributeValueLengthLimit", -1)
-
-	r.SetEventName(f.EventName)
-	r.SetTimestamp(f.Timestamp)
-	r.SetObservedTimestamp(f.ObservedTimestamp)
-	r.SetSeverity(f.Severity)
-	r.SetSeverityText(f.SeverityText)
-	r.SetBody(f.Body)
-	r.SetAttributes(f.Attributes...)
-	r.SetTraceID(f.TraceID)
-	r.SetSpanID(f.SpanID)
-	r.SetTraceFlags(f.TraceFlags)
-
-	set(r, "resource", f.Resource)
-	set(r, "scope", f.InstrumentationScope)
-	set(r, "dropped", f.DroppedAttributes)
-
-	return *r
+	_ = "STUB: not implemented"
+	return *new(sdklog.Record)
 }
 
-func set(r *sdklog.Record, name string, value any) {
-	rVal := reflect.ValueOf(r).Elem()
-	rf := rVal.FieldByName(name)
-	rf = reflect.NewAt(rf.Type(), unsafe.Pointer(rf.UnsafeAddr())).
-		Elem()
-		// nolint: gosec  // conversion of uintptr -> unsafe.Pointer.
-	rf.Set(reflect.ValueOf(value))
-}
+func set(r *sdklog.Record, name string, value any) { _ = "STUB: not implemented"; return }

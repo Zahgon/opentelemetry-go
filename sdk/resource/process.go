@@ -1,17 +1,10 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package resource
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/user"
-	"path/filepath"
 	"runtime"
-
-	semconv "go.opentelemetry.io/otel/semconv/v1.42.0"
 )
 
 type (
@@ -52,32 +45,18 @@ var (
 	runtimeArch    = defaultRuntimeArchProvider
 )
 
-func setDefaultOSProviders() {
-	setOSProviders(
-		defaultPidProvider,
-		defaultExecutablePathProvider,
-		defaultCommandArgsProvider,
-	)
-}
+func setDefaultOSProviders() { _ = "STUB: not implemented"; return }
 
 func setOSProviders(
 	pidProvider pidProvider,
 	executablePathProvider executablePathProvider,
 	commandArgsProvider commandArgsProvider,
 ) {
-	pid = pidProvider
-	executablePath = executablePathProvider
-	commandArgs = commandArgsProvider
+	_ = "STUB: not implemented"
+	return
 }
 
-func setDefaultRuntimeProviders() {
-	setRuntimeProviders(
-		defaultRuntimeNameProvider,
-		defaultRuntimeVersionProvider,
-		defaultRuntimeOSProvider,
-		defaultRuntimeArchProvider,
-	)
-}
+func setDefaultRuntimeProviders() { _ = "STUB: not implemented"; return }
 
 func setRuntimeProviders(
 	runtimeNameProvider runtimeNameProvider,
@@ -85,19 +64,13 @@ func setRuntimeProviders(
 	runtimeOSProvider runtimeOSProvider,
 	runtimeArchProvider runtimeArchProvider,
 ) {
-	runtimeName = runtimeNameProvider
-	runtimeVersion = runtimeVersionProvider
-	runtimeOS = runtimeOSProvider
-	runtimeArch = runtimeArchProvider
+	_ = "STUB: not implemented"
+	return
 }
 
-func setDefaultUserProviders() {
-	setUserProviders(defaultOwnerProvider)
-}
+func setDefaultUserProviders() { _ = "STUB: not implemented"; return }
 
-func setUserProviders(ownerProvider ownerProvider) {
-	owner = ownerProvider
-}
+func setUserProviders(ownerProvider ownerProvider) { _ = "STUB: not implemented"; return }
 
 type (
 	processPIDDetector                struct{}
@@ -110,65 +83,42 @@ type (
 	processRuntimeDescriptionDetector struct{}
 )
 
-// Detect returns a *Resource that describes the process identifier (PID) of the
-// executing process.
 func (processPIDDetector) Detect(context.Context) (*Resource, error) {
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessPID(pid())), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the name of the process executable.
 func (processExecutableNameDetector) Detect(context.Context) (*Resource, error) {
-	executableName := filepath.Base(commandArgs()[0])
-
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessExecutableName(executableName)), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the full path of the process executable.
 func (processExecutablePathDetector) Detect(context.Context) (*Resource, error) {
-	executablePath, err := executablePath()
-	if err != nil {
-		return nil, err
-	}
-
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessExecutablePath(executablePath)), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes all the command arguments as received
-// by the process.
 func (processCommandArgsDetector) Detect(context.Context) (*Resource, error) {
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessCommandArgs(commandArgs()...)), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the username of the user that owns the
-// process.
 func (processOwnerDetector) Detect(context.Context) (*Resource, error) {
-	owner, err := owner()
-	if err != nil {
-		return nil, err
-	}
-
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessOwner(owner.Username)), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the name of the compiler used to compile
-// this process image.
 func (processRuntimeNameDetector) Detect(context.Context) (*Resource, error) {
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessRuntimeName(runtimeName())), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the version of the runtime of this process.
 func (processRuntimeVersionDetector) Detect(context.Context) (*Resource, error) {
-	return NewWithAttributes(semconv.SchemaURL, semconv.ProcessRuntimeVersion(runtimeVersion())), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// Detect returns a *Resource that describes the runtime of this process.
 func (processRuntimeDescriptionDetector) Detect(context.Context) (*Resource, error) {
-	runtimeDescription := fmt.Sprintf(
-		"go version %s %s/%s", runtimeVersion(), runtimeOS(), runtimeArch(),
-	)
-
-	return NewWithAttributes(
-		semconv.SchemaURL,
-		semconv.ProcessRuntimeDescription(runtimeDescription),
-	), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

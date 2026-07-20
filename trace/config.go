@@ -1,56 +1,36 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package trace
 
 import (
-	"slices"
 	"time"
 
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// TracerConfig is a group of options for a Tracer.
 type TracerConfig struct {
 	instrumentationVersion string
-	// Schema URL of the telemetry emitted by the Tracer.
+
 	schemaURL string
 	attrs     attribute.Set
 }
 
-// InstrumentationVersion returns the version of the library providing instrumentation.
-func (t *TracerConfig) InstrumentationVersion() string {
-	return t.instrumentationVersion
-}
+func (t *TracerConfig) InstrumentationVersion() string { _ = "STUB: not implemented"; return "" }
 
-// InstrumentationAttributes returns the attributes associated with the library
-// providing instrumentation.
 func (t *TracerConfig) InstrumentationAttributes() attribute.Set {
-	return t.attrs
+	_ = "STUB: not implemented"
+	return *new(attribute.Set)
 }
 
-// SchemaURL returns the Schema URL of the telemetry emitted by the Tracer.
-func (t *TracerConfig) SchemaURL() string {
-	return t.schemaURL
-}
+func (t *TracerConfig) SchemaURL() string { _ = "STUB: not implemented"; return "" }
 
 type experimentalOption interface {
 	Experimental()
 }
 
-// NewTracerConfig applies all the options to a returned TracerConfig.
 func NewTracerConfig(options ...TracerOption) TracerConfig {
-	var config TracerConfig
-	for _, option := range options {
-		if _, ok := option.(experimentalOption); ok {
-			continue
-		}
-		config = option.apply(config)
-	}
-	return config
+	_ = "STUB: not implemented"
+	return *new(TracerConfig)
 }
 
-// TracerOption applies an option to a TracerConfig.
 type TracerOption interface {
 	apply(TracerConfig) TracerConfig
 }
@@ -58,10 +38,10 @@ type TracerOption interface {
 type tracerOptionFunc func(TracerConfig) TracerConfig
 
 func (fn tracerOptionFunc) apply(cfg TracerConfig) TracerConfig {
-	return fn(cfg)
+	_ = "STUB: not implemented"
+	return *new(TracerConfig)
 }
 
-// SpanConfig is a group of options for a Span.
 type SpanConfig struct {
 	attributes []attribute.KeyValue
 	timestamp  time.Time
@@ -71,70 +51,28 @@ type SpanConfig struct {
 	stackTrace bool
 }
 
-// Attributes describe the associated qualities of a Span.
-func (cfg *SpanConfig) Attributes() []attribute.KeyValue {
-	return cfg.attributes
-}
+func (cfg *SpanConfig) Attributes() []attribute.KeyValue { _ = "STUB: not implemented"; return nil }
 
-// Timestamp is a time in a Span life-cycle.
-func (cfg *SpanConfig) Timestamp() time.Time {
-	return cfg.timestamp
-}
+func (cfg *SpanConfig) Timestamp() time.Time { _ = "STUB: not implemented"; return *new(time.Time) }
 
-// StackTrace reports whether stack trace capturing is enabled.
-func (cfg *SpanConfig) StackTrace() bool {
-	return cfg.stackTrace
-}
+func (cfg *SpanConfig) StackTrace() bool { _ = "STUB: not implemented"; return false }
 
-// Links are the associations a Span has with other Spans.
-func (cfg *SpanConfig) Links() []Link {
-	return cfg.links
-}
+func (cfg *SpanConfig) Links() []Link { _ = "STUB: not implemented"; return nil }
 
-// NewRoot identifies a Span as the root Span for a new trace. This is
-// commonly used when an existing trace crosses trust boundaries and the
-// remote parent span context should be ignored for security.
-func (cfg *SpanConfig) NewRoot() bool {
-	return cfg.newRoot
-}
+func (cfg *SpanConfig) NewRoot() bool { _ = "STUB: not implemented"; return false }
 
-// SpanKind is the role a Span has in a trace.
-func (cfg *SpanConfig) SpanKind() SpanKind {
-	return cfg.spanKind
-}
+func (cfg *SpanConfig) SpanKind() SpanKind { _ = "STUB: not implemented"; return *new(SpanKind) }
 
-// NewSpanStartConfig applies all the options to a returned SpanConfig.
-// No validation is performed on the returned SpanConfig (e.g. no uniqueness
-// checking or bounding of data), it is left to the SDK to perform this
-// action.
 func NewSpanStartConfig(options ...SpanStartOption) SpanConfig {
-	var c SpanConfig
-	for _, option := range options {
-		if _, ok := option.(experimentalOption); ok {
-			continue
-		}
-		c = option.applySpanStart(c)
-	}
-	return c
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
 
-// NewSpanEndConfig applies all the options to a returned SpanConfig.
-// No validation is performed on the returned SpanConfig (e.g. no uniqueness
-// checking or bounding of data), it is left to the SDK to perform this
-// action.
 func NewSpanEndConfig(options ...SpanEndOption) SpanConfig {
-	var c SpanConfig
-	for _, option := range options {
-		if _, ok := option.(experimentalOption); ok {
-			continue
-		}
-		c = option.applySpanEnd(c)
-	}
-	return c
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
 
-// SpanStartOption applies an option to a SpanConfig. These options are applicable
-// only when the span is created.
 type SpanStartOption interface {
 	applySpanStart(SpanConfig) SpanConfig
 }
@@ -142,73 +80,45 @@ type SpanStartOption interface {
 type spanOptionFunc func(SpanConfig) SpanConfig
 
 func (fn spanOptionFunc) applySpanStart(cfg SpanConfig) SpanConfig {
-	return fn(cfg)
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
 
-// SpanEndOption applies an option to a SpanConfig. These options are
-// applicable only when the span is ended.
 type SpanEndOption interface {
 	applySpanEnd(SpanConfig) SpanConfig
 }
 
-// EventConfig is a group of options for an Event.
 type EventConfig struct {
 	attributes []attribute.KeyValue
 	timestamp  time.Time
 	stackTrace bool
 }
 
-// Attributes describe the associated qualities of an Event.
-func (cfg *EventConfig) Attributes() []attribute.KeyValue {
-	return cfg.attributes
-}
+func (cfg *EventConfig) Attributes() []attribute.KeyValue { _ = "STUB: not implemented"; return nil }
 
-// Timestamp is a time in an Event life-cycle.
-func (cfg *EventConfig) Timestamp() time.Time {
-	return cfg.timestamp
-}
+func (cfg *EventConfig) Timestamp() time.Time { _ = "STUB: not implemented"; return *new(time.Time) }
 
-// StackTrace reports whether stack trace capturing is enabled.
-func (cfg *EventConfig) StackTrace() bool {
-	return cfg.stackTrace
-}
+func (cfg *EventConfig) StackTrace() bool { _ = "STUB: not implemented"; return false }
 
-// NewEventConfig applies all the EventOptions to a returned EventConfig. If no
-// timestamp option is passed, the returned EventConfig will have a Timestamp
-// set to the call time, otherwise no validation is performed on the returned
-// EventConfig.
 func NewEventConfig(options ...EventOption) EventConfig {
-	var c EventConfig
-	for _, option := range options {
-		if _, ok := option.(experimentalOption); ok {
-			continue
-		}
-		c = option.applyEvent(c)
-	}
-	if c.timestamp.IsZero() {
-		c.timestamp = time.Now()
-	}
-	return c
+	_ = "STUB: not implemented"
+	return *new(EventConfig)
 }
 
-// EventOption applies span event options to an EventConfig.
 type EventOption interface {
 	applyEvent(EventConfig) EventConfig
 }
 
-// SpanOption are options that can be used at both the beginning and end of a span.
 type SpanOption interface {
 	SpanStartOption
 	SpanEndOption
 }
 
-// SpanStartEventOption are options that can be used at the start of a span, or with an event.
 type SpanStartEventOption interface {
 	SpanStartOption
 	EventOption
 }
 
-// SpanEndEventOption are options that can be used at the end of a span, or with an event.
 type SpanEndEventOption interface {
 	SpanEndOption
 	EventOption
@@ -217,31 +127,26 @@ type SpanEndEventOption interface {
 type attributeOption []attribute.KeyValue
 
 func (o attributeOption) applySpan(c SpanConfig) SpanConfig {
-	c.attributes = append(c.attributes, []attribute.KeyValue(o)...)
-	return c
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
-func (o attributeOption) applySpanStart(c SpanConfig) SpanConfig { return o.applySpan(c) }
+
+func (o attributeOption) applySpanStart(c SpanConfig) SpanConfig {
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
+}
 func (o attributeOption) applyEvent(c EventConfig) EventConfig {
-	c.attributes = append(c.attributes, []attribute.KeyValue(o)...)
-	return c
+	_ = "STUB: not implemented"
+	return *new(EventConfig)
 }
 
 var _ SpanStartEventOption = attributeOption{}
 
-// WithAttributes adds the attributes related to a span life-cycle event.
-// These attributes are used to describe the work a Span represents when this
-// option is provided to a Span's start event. Otherwise, these
-// attributes provide additional information about the event being recorded
-// (e.g. error, state change, processing progress, system event).
-//
-// If multiple of these options are passed the attributes of each successive
-// option will extend the attributes instead of overwriting. There is no
-// guarantee of uniqueness in the resulting attributes.
 func WithAttributes(attributes ...attribute.KeyValue) SpanStartEventOption {
-	return attributeOption(attributes)
+	_ = "STUB: not implemented"
+	return *new(SpanStartEventOption)
 }
 
-// SpanEventOption are options that can be used with an event or a span.
 type SpanEventOption interface {
 	SpanOption
 	EventOption
@@ -250,129 +155,85 @@ type SpanEventOption interface {
 type timestampOption time.Time
 
 func (o timestampOption) applySpan(c SpanConfig) SpanConfig {
-	c.timestamp = time.Time(o)
-	return c
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
-func (o timestampOption) applySpanStart(c SpanConfig) SpanConfig { return o.applySpan(c) }
-func (o timestampOption) applySpanEnd(c SpanConfig) SpanConfig   { return o.applySpan(c) }
+
+func (o timestampOption) applySpanStart(c SpanConfig) SpanConfig {
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
+}
+func (o timestampOption) applySpanEnd(c SpanConfig) SpanConfig {
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
+}
 func (o timestampOption) applyEvent(c EventConfig) EventConfig {
-	c.timestamp = time.Time(o)
-	return c
+	_ = "STUB: not implemented"
+	return *new(EventConfig)
 }
 
 var _ SpanEventOption = timestampOption{}
 
-// WithTimestamp sets the time of a Span or Event life-cycle moment (e.g.
-// started, stopped, errored).
 func WithTimestamp(t time.Time) SpanEventOption {
-	return timestampOption(t)
+	_ = "STUB: not implemented"
+	return *new(SpanEventOption)
 }
 
 type stackTraceOption bool
 
 func (o stackTraceOption) applyEvent(c EventConfig) EventConfig {
-	c.stackTrace = bool(o)
-	return c
+	_ = "STUB: not implemented"
+	return *new(EventConfig)
 }
 
 func (o stackTraceOption) applySpan(c SpanConfig) SpanConfig {
-	c.stackTrace = bool(o)
-	return c
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
 }
-func (o stackTraceOption) applySpanEnd(c SpanConfig) SpanConfig { return o.applySpan(c) }
 
-// WithStackTrace sets the flag to capture the error with stack trace (e.g. true, false).
+func (o stackTraceOption) applySpanEnd(c SpanConfig) SpanConfig {
+	_ = "STUB: not implemented"
+	return *new(SpanConfig)
+}
+
 func WithStackTrace(b bool) SpanEndEventOption {
-	return stackTraceOption(b)
+	_ = "STUB: not implemented"
+	return *new(SpanEndEventOption)
 }
 
-// WithLinks adds links to a Span. The links are added to the existing Span
-// links, i.e. this does not overwrite. Links with invalid span context are ignored.
 func WithLinks(links ...Link) SpanStartOption {
-	return spanOptionFunc(func(cfg SpanConfig) SpanConfig {
-		cfg.links = append(cfg.links, links...)
-		return cfg
-	})
+	_ = "STUB: not implemented"
+	return *new(SpanStartOption)
 }
 
-// WithNewRoot specifies that the Span should be treated as a root Span. Any
-// existing parent span context will be ignored when defining the Span's trace
-// identifiers.
-func WithNewRoot() SpanStartOption {
-	return spanOptionFunc(func(cfg SpanConfig) SpanConfig {
-		cfg.newRoot = true
-		return cfg
-	})
-}
+func WithNewRoot() SpanStartOption { _ = "STUB: not implemented"; return *new(SpanStartOption) }
 
-// WithSpanKind sets the SpanKind of a Span.
 func WithSpanKind(kind SpanKind) SpanStartOption {
-	return spanOptionFunc(func(cfg SpanConfig) SpanConfig {
-		cfg.spanKind = kind
-		return cfg
-	})
+	_ = "STUB: not implemented"
+	return *new(SpanStartOption)
 }
 
-// WithInstrumentationVersion sets the instrumentation version.
 func WithInstrumentationVersion(version string) TracerOption {
-	return tracerOptionFunc(func(cfg TracerConfig) TracerConfig {
-		cfg.instrumentationVersion = version
-		return cfg
-	})
+	_ = "STUB: not implemented"
+	return *new(TracerOption)
 }
 
-// mergeSets returns the union of keys between a and b. Any duplicate keys will
-// use the value associated with b.
 func mergeSets(a, b attribute.Set) attribute.Set {
-	// NewMergeIterator uses the first value for any duplicates.
-	iter := attribute.NewMergeIterator(&b, &a)
-	merged := make([]attribute.KeyValue, 0, a.Len()+b.Len())
-	for iter.Next() {
-		merged = append(merged, iter.Attribute())
-	}
-	return attribute.NewSet(merged...)
+	_ = "STUB: not implemented"
+	return *new(attribute.Set)
 }
 
-// WithInstrumentationAttributes adds the instrumentation attributes.
-//
-// This is equivalent to calling [WithInstrumentationAttributeSet] with an
-// [attribute.Set] created from a clone of the passed attributes.
-// [WithInstrumentationAttributeSet] is recommended for more control.
-//
-// If multiple [WithInstrumentationAttributes] or [WithInstrumentationAttributeSet]
-// options are passed, the attributes will be merged together in the order
-// they are passed. Attributes with duplicate keys will use the last value passed.
 func WithInstrumentationAttributes(attr ...attribute.KeyValue) TracerOption {
-	set := attribute.NewSet(slices.Clone(attr)...)
-	return WithInstrumentationAttributeSet(set)
+	_ = "STUB: not implemented"
+	return *new(TracerOption)
 }
 
-// WithInstrumentationAttributeSet adds the instrumentation attributes.
-//
-// If multiple [WithInstrumentationAttributes] or [WithInstrumentationAttributeSet]
-// options are passed, the attributes will be merged together in the order
-// they are passed. Attributes with duplicate keys will use the last value passed.
 func WithInstrumentationAttributeSet(set attribute.Set) TracerOption {
-	if set.Len() == 0 {
-		return tracerOptionFunc(func(config TracerConfig) TracerConfig {
-			return config
-		})
-	}
-
-	return tracerOptionFunc(func(config TracerConfig) TracerConfig {
-		if config.attrs.Len() == 0 {
-			config.attrs = set
-		} else {
-			config.attrs = mergeSets(config.attrs, set)
-		}
-		return config
-	})
+	_ = "STUB: not implemented"
+	return *new(TracerOption)
 }
 
-// WithSchemaURL sets the schema URL for the Tracer.
 func WithSchemaURL(schemaURL string) TracerOption {
-	return tracerOptionFunc(func(cfg TracerConfig) TracerConfig {
-		cfg.schemaURL = schemaURL
-		return cfg
-	})
+	_ = "STUB: not implemented"
+	return *new(TracerOption)
 }

@@ -1,10 +1,3 @@
-// Code generated from semantic convention specification. DO NOT EDIT.
-
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package httpconv provides types and functionality for OpenTelemetry semantic
-// conventions in the "http" namespace.
 package httpconv
 
 import (
@@ -12,78 +5,56 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/noop"
-	"go.opentelemetry.io/otel/semconv/internal/metricpool"
 )
 
-// ErrorTypeAttr is an attribute conforming to the error.type semantic
-// conventions. It represents the describes a class of error the operation ended
-// with.
 type ErrorTypeAttr string
 
 var (
-	// ErrorTypeOther is a fallback error value to be used when the instrumentation
-	// doesn't define a custom value.
 	ErrorTypeOther ErrorTypeAttr = "_OTHER"
 )
 
-// ConnectionStateAttr is an attribute conforming to the http.connection.state
-// semantic conventions. It represents the state of the HTTP connection in the
-// HTTP connection pool.
 type ConnectionStateAttr string
 
 var (
-	// ConnectionStateActive is the active state.
 	ConnectionStateActive ConnectionStateAttr = "active"
-	// ConnectionStateIdle is the idle state.
+
 	ConnectionStateIdle ConnectionStateAttr = "idle"
 )
 
-// RequestMethodAttr is an attribute conforming to the http.request.method
-// semantic conventions. It represents the HTTP request method.
 type RequestMethodAttr string
 
 var (
-	// RequestMethodConnect is the CONNECT method.
 	RequestMethodConnect RequestMethodAttr = "CONNECT"
-	// RequestMethodDelete is the DELETE method.
+
 	RequestMethodDelete RequestMethodAttr = "DELETE"
-	// RequestMethodGet is the GET method.
+
 	RequestMethodGet RequestMethodAttr = "GET"
-	// RequestMethodHead is the HEAD method.
+
 	RequestMethodHead RequestMethodAttr = "HEAD"
-	// RequestMethodOptions is the OPTIONS method.
+
 	RequestMethodOptions RequestMethodAttr = "OPTIONS"
-	// RequestMethodPatch is the PATCH method.
+
 	RequestMethodPatch RequestMethodAttr = "PATCH"
-	// RequestMethodPost is the POST method.
+
 	RequestMethodPost RequestMethodAttr = "POST"
-	// RequestMethodPut is the PUT method.
+
 	RequestMethodPut RequestMethodAttr = "PUT"
-	// RequestMethodTrace is the TRACE method.
+
 	RequestMethodTrace RequestMethodAttr = "TRACE"
-	// RequestMethodQuery is the QUERY method.
+
 	RequestMethodQuery RequestMethodAttr = "QUERY"
-	// RequestMethodOther is the any HTTP method that the instrumentation has no
-	// prior knowledge of.
+
 	RequestMethodOther RequestMethodAttr = "_OTHER"
 )
 
-// UserAgentSyntheticTypeAttr is an attribute conforming to the
-// user_agent.synthetic.type semantic conventions. It represents the specifies
-// the category of synthetic traffic, such as tests or bots.
 type UserAgentSyntheticTypeAttr string
 
 var (
-	// UserAgentSyntheticTypeBot is the bot source.
 	UserAgentSyntheticTypeBot UserAgentSyntheticTypeAttr = "bot"
-	// UserAgentSyntheticTypeTest is the synthetic test source.
+
 	UserAgentSyntheticTypeTest UserAgentSyntheticTypeAttr = "test"
 )
 
-// ClientActiveRequests is an instrument used to record metric values conforming
-// to the "http.client.active_requests" semantic conventions. It represents the
-// number of active HTTP requests.
 type ClientActiveRequests struct {
 	metric.Int64UpDownCounter
 }
@@ -93,60 +64,25 @@ var newClientActiveRequestsOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{request}"),
 }
 
-// NewClientActiveRequests returns a new ClientActiveRequests instrument.
 func NewClientActiveRequests(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (ClientActiveRequests, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientActiveRequests{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientActiveRequestsOpts
-	} else {
-		opt = append(opt, newClientActiveRequestsOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"http.client.active_requests",
-		opt...,
-	)
-	if err != nil {
-		return ClientActiveRequests{noop.Int64UpDownCounter{}}, err
-	}
-	return ClientActiveRequests{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientActiveRequests), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientActiveRequests) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientActiveRequests) Name() string {
-	return "http.client.active_requests"
-}
+func (ClientActiveRequests) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientActiveRequests) Unit() string {
-	return "{request}"
-}
+func (ClientActiveRequests) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientActiveRequests) Description() string {
-	return "Number of active HTTP requests."
-}
+func (ClientActiveRequests) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
 func (m ClientActiveRequests) Add(
 	ctx context.Context,
 	incr int64,
@@ -154,78 +90,30 @@ func (m ClientActiveRequests) Add(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m ClientActiveRequests) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrURLTemplate returns an optional attribute for the "url.template" semantic
-// convention. It represents the low-cardinality template of an
-// [absolute path reference].
-//
-// [absolute path reference]: https://www.rfc-editor.org/rfc/rfc3986#section-4.2
 func (ClientActiveRequests) AttrURLTemplate(val string) attribute.KeyValue {
-	return attribute.String("url.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRequestMethod returns an optional attribute for the "http.request.method"
-// semantic convention. It represents the HTTP request method.
 func (ClientActiveRequests) AttrRequestMethod(val RequestMethodAttr) attribute.KeyValue {
-	return attribute.String("http.request.method", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientActiveRequests) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientActiveRequestsObservable is an instrument used to record metric values
-// conforming to the "http.client.active_requests" semantic conventions. It
-// represents the number of active HTTP requests.
 type ClientActiveRequestsObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -235,94 +123,50 @@ var newClientActiveRequestsObservableOpts = []metric.Int64ObservableUpDownCounte
 	metric.WithUnit("{request}"),
 }
 
-// NewClientActiveRequestsObservable returns a new ClientActiveRequestsObservable
-// instrument.
 func NewClientActiveRequestsObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (ClientActiveRequestsObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientActiveRequestsObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientActiveRequestsObservableOpts
-	} else {
-		opt = append(opt, newClientActiveRequestsObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"http.client.active_requests",
-		opt...,
-	)
-	if err != nil {
-		return ClientActiveRequestsObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return ClientActiveRequestsObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientActiveRequestsObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientActiveRequestsObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientActiveRequestsObservable) Name() string {
-	return "http.client.active_requests"
-}
+func (ClientActiveRequestsObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientActiveRequestsObservable) Unit() string {
-	return "{request}"
-}
+func (ClientActiveRequestsObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientActiveRequestsObservable) Description() string {
-	return "Number of active HTTP requests."
-}
+func (ClientActiveRequestsObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrServerAddress returns a required attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientActiveRequestsObservable) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns a required attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientActiveRequestsObservable) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLTemplate returns an optional attribute for the "url.template" semantic
-// convention. It represents the low-cardinality template of an
-// [absolute path reference].
-//
-// [absolute path reference]: https://www.rfc-editor.org/rfc/rfc3986#section-4.2
 func (ClientActiveRequestsObservable) AttrURLTemplate(val string) attribute.KeyValue {
-	return attribute.String("url.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRequestMethod returns an optional attribute for the "http.request.method"
-// semantic convention. It represents the HTTP request method.
 func (ClientActiveRequestsObservable) AttrRequestMethod(val RequestMethodAttr) attribute.KeyValue {
-	return attribute.String("http.request.method", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientActiveRequestsObservable) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientConnectionDuration is an instrument used to record metric values
-// conforming to the "http.client.connection.duration" semantic conventions. It
-// represents the duration of the successfully established outbound HTTP
-// connections.
 type ClientConnectionDuration struct {
 	metric.Float64Histogram
 }
@@ -332,60 +176,25 @@ var newClientConnectionDurationOpts = []metric.Float64HistogramOption{
 	metric.WithUnit("s"),
 }
 
-// NewClientConnectionDuration returns a new ClientConnectionDuration instrument.
 func NewClientConnectionDuration(
 	m metric.Meter,
 	opt ...metric.Float64HistogramOption,
 ) (ClientConnectionDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientConnectionDuration{noop.Float64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientConnectionDurationOpts
-	} else {
-		opt = append(opt, newClientConnectionDurationOpts...)
-	}
-
-	i, err := m.Float64Histogram(
-		"http.client.connection.duration",
-		opt...,
-	)
-	if err != nil {
-		return ClientConnectionDuration{noop.Float64Histogram{}}, err
-	}
-	return ClientConnectionDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientConnectionDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientConnectionDuration) Inst() metric.Float64Histogram {
-	return m.Float64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientConnectionDuration) Name() string {
-	return "http.client.connection.duration"
-}
+func (ClientConnectionDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientConnectionDuration) Unit() string {
-	return "s"
-}
+func (ClientConnectionDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientConnectionDuration) Description() string {
-	return "The duration of the successfully established outbound HTTP connections."
-}
+func (ClientConnectionDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
 func (m ClientConnectionDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -393,78 +202,30 @@ func (m ClientConnectionDuration) Record(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ClientConnectionDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientConnectionDuration) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkPeerAddress returns an optional attribute for the
-// "network.peer.address" semantic convention. It represents the peer address of
-// the network connection - IP address or Unix domain socket name.
 func (ClientConnectionDuration) AttrNetworkPeerAddress(val string) attribute.KeyValue {
-	return attribute.String("network.peer.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientConnectionDuration) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientOpenConnections is an instrument used to record metric values conforming
-// to the "http.client.open_connections" semantic conventions. It represents the
-// number of outbound HTTP connections that are currently active or idle on the
-// client.
 type ClientOpenConnections struct {
 	metric.Int64UpDownCounter
 }
@@ -474,63 +235,25 @@ var newClientOpenConnectionsOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{connection}"),
 }
 
-// NewClientOpenConnections returns a new ClientOpenConnections instrument.
 func NewClientOpenConnections(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (ClientOpenConnections, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientOpenConnections{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientOpenConnectionsOpts
-	} else {
-		opt = append(opt, newClientOpenConnectionsOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"http.client.open_connections",
-		opt...,
-	)
-	if err != nil {
-		return ClientOpenConnections{noop.Int64UpDownCounter{}}, err
-	}
-	return ClientOpenConnections{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientOpenConnections), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientOpenConnections) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientOpenConnections) Name() string {
-	return "http.client.open_connections"
-}
+func (ClientOpenConnections) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientOpenConnections) Unit() string {
-	return "{connection}"
-}
+func (ClientOpenConnections) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientOpenConnections) Description() string {
-	return "Number of outbound HTTP connections that are currently active or idle on the client."
-}
+func (ClientOpenConnections) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The connectionState is the state of the HTTP connection in the HTTP connection
-// pool.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
 func (m ClientOpenConnections) Add(
 	ctx context.Context,
 	incr int64,
@@ -539,80 +262,30 @@ func (m ClientOpenConnections) Add(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("http.connection.state", string(connectionState)),
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.connection.state", string(connectionState)),
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m ClientOpenConnections) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientOpenConnections) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkPeerAddress returns an optional attribute for the
-// "network.peer.address" semantic convention. It represents the peer address of
-// the network connection - IP address or Unix domain socket name.
 func (ClientOpenConnections) AttrNetworkPeerAddress(val string) attribute.KeyValue {
-	return attribute.String("network.peer.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientOpenConnections) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientOpenConnectionsObservable is an instrument used to record metric values
-// conforming to the "http.client.open_connections" semantic conventions. It
-// represents the number of outbound HTTP connections that are currently active
-// or idle on the client.
 type ClientOpenConnectionsObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -622,99 +295,55 @@ var newClientOpenConnectionsObservableOpts = []metric.Int64ObservableUpDownCount
 	metric.WithUnit("{connection}"),
 }
 
-// NewClientOpenConnectionsObservable returns a new
-// ClientOpenConnectionsObservable instrument.
 func NewClientOpenConnectionsObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (ClientOpenConnectionsObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientOpenConnectionsObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientOpenConnectionsObservableOpts
-	} else {
-		opt = append(opt, newClientOpenConnectionsObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"http.client.open_connections",
-		opt...,
-	)
-	if err != nil {
-		return ClientOpenConnectionsObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return ClientOpenConnectionsObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientOpenConnectionsObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientOpenConnectionsObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientOpenConnectionsObservable) Name() string {
-	return "http.client.open_connections"
-}
+func (ClientOpenConnectionsObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientOpenConnectionsObservable) Unit() string {
-	return "{connection}"
-}
+func (ClientOpenConnectionsObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientOpenConnectionsObservable) Description() string {
-	return "Number of outbound HTTP connections that are currently active or idle on the client."
-}
+func (ClientOpenConnectionsObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrConnectionState returns a required attribute for the
-// "http.connection.state" semantic convention. It represents the state of the
-// HTTP connection in the HTTP connection pool.
 func (ClientOpenConnectionsObservable) AttrConnectionState(val ConnectionStateAttr) attribute.KeyValue {
-	return attribute.String("http.connection.state", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns a required attribute for the "server.address"
-// semantic convention. It represents the server domain name if available without
-// reverse DNS lookup; otherwise, IP address or Unix domain socket name.
 func (ClientOpenConnectionsObservable) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns a required attribute for the "server.port" semantic
-// convention. It represents the server port number.
 func (ClientOpenConnectionsObservable) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientOpenConnectionsObservable) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkPeerAddress returns an optional attribute for the
-// "network.peer.address" semantic convention. It represents the peer address of
-// the network connection - IP address or Unix domain socket name.
 func (ClientOpenConnectionsObservable) AttrNetworkPeerAddress(val string) attribute.KeyValue {
-	return attribute.String("network.peer.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientOpenConnectionsObservable) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientRequestBodySize is an instrument used to record metric values conforming
-// to the "http.client.request.body.size" semantic conventions. It represents the
-// size of HTTP client request bodies.
 type ClientRequestBodySize struct {
 	metric.Int64Histogram
 }
@@ -724,69 +353,25 @@ var newClientRequestBodySizeOpts = []metric.Int64HistogramOption{
 	metric.WithUnit("By"),
 }
 
-// NewClientRequestBodySize returns a new ClientRequestBodySize instrument.
 func NewClientRequestBodySize(
 	m metric.Meter,
 	opt ...metric.Int64HistogramOption,
 ) (ClientRequestBodySize, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientRequestBodySize{noop.Int64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientRequestBodySizeOpts
-	} else {
-		opt = append(opt, newClientRequestBodySizeOpts...)
-	}
-
-	i, err := m.Int64Histogram(
-		"http.client.request.body.size",
-		opt...,
-	)
-	if err != nil {
-		return ClientRequestBodySize{noop.Int64Histogram{}}, err
-	}
-	return ClientRequestBodySize{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientRequestBodySize), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientRequestBodySize) Inst() metric.Int64Histogram {
-	return m.Int64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientRequestBodySize) Name() string {
-	return "http.client.request.body.size"
-}
+func (ClientRequestBodySize) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientRequestBodySize) Unit() string {
-	return "By"
-}
+func (ClientRequestBodySize) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientRequestBodySize) Description() string {
-	return "Size of HTTP client request bodies."
-}
+func (ClientRequestBodySize) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// The size of the request payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ClientRequestBodySize) Record(
 	ctx context.Context,
 	val int64,
@@ -795,113 +380,45 @@ func (m ClientRequestBodySize) Record(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// The size of the request payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ClientRequestBodySize) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientRequestBodySize) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ClientRequestBodySize) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ClientRequestBodySize) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLTemplate returns an optional attribute for the "url.template" semantic
-// convention. It represents the low-cardinality template of an
-// [absolute path reference].
-//
-// [absolute path reference]: https://www.rfc-editor.org/rfc/rfc3986#section-4.2
 func (ClientRequestBodySize) AttrURLTemplate(val string) attribute.KeyValue {
-	return attribute.String("url.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientRequestBodySize) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientRequestBodySize) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientRequestDuration is an instrument used to record metric values conforming
-// to the "http.client.request.duration" semantic conventions. It represents the
-// duration of HTTP client requests.
 type ClientRequestDuration struct {
 	metric.Float64Histogram
 }
@@ -912,62 +429,25 @@ var newClientRequestDurationOpts = []metric.Float64HistogramOption{
 	metric.WithExplicitBucketBoundaries([]float64{0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10}...),
 }
 
-// NewClientRequestDuration returns a new ClientRequestDuration instrument.
 func NewClientRequestDuration(
 	m metric.Meter,
 	opt ...metric.Float64HistogramOption,
 ) (ClientRequestDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientRequestDuration{noop.Float64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientRequestDurationOpts
-	} else {
-		opt = append(opt, newClientRequestDurationOpts...)
-	}
-
-	i, err := m.Float64Histogram(
-		"http.client.request.duration",
-		opt...,
-	)
-	if err != nil {
-		return ClientRequestDuration{noop.Float64Histogram{}}, err
-	}
-	return ClientRequestDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientRequestDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientRequestDuration) Inst() metric.Float64Histogram {
-	return m.Float64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientRequestDuration) Name() string {
-	return "http.client.request.duration"
-}
+func (ClientRequestDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientRequestDuration) Unit() string {
-	return "s"
-}
+func (ClientRequestDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientRequestDuration) Description() string {
-	return "Duration of HTTP client requests."
-}
+func (ClientRequestDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
 func (m ClientRequestDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -976,106 +456,45 @@ func (m ClientRequestDuration) Record(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ClientRequestDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientRequestDuration) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ClientRequestDuration) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ClientRequestDuration) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientRequestDuration) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientRequestDuration) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLTemplate returns an optional attribute for the "url.template" semantic
-// convention. It represents the low-cardinality template of an
-// [absolute path reference].
-//
-// [absolute path reference]: https://www.rfc-editor.org/rfc/rfc3986#section-4.2
 func (ClientRequestDuration) AttrURLTemplate(val string) attribute.KeyValue {
-	return attribute.String("url.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ClientResponseBodySize is an instrument used to record metric values
-// conforming to the "http.client.response.body.size" semantic conventions. It
-// represents the size of HTTP client response bodies.
 type ClientResponseBodySize struct {
 	metric.Int64Histogram
 }
@@ -1085,69 +504,25 @@ var newClientResponseBodySizeOpts = []metric.Int64HistogramOption{
 	metric.WithUnit("By"),
 }
 
-// NewClientResponseBodySize returns a new ClientResponseBodySize instrument.
 func NewClientResponseBodySize(
 	m metric.Meter,
 	opt ...metric.Int64HistogramOption,
 ) (ClientResponseBodySize, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ClientResponseBodySize{noop.Int64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newClientResponseBodySizeOpts
-	} else {
-		opt = append(opt, newClientResponseBodySizeOpts...)
-	}
-
-	i, err := m.Int64Histogram(
-		"http.client.response.body.size",
-		opt...,
-	)
-	if err != nil {
-		return ClientResponseBodySize{noop.Int64Histogram{}}, err
-	}
-	return ClientResponseBodySize{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ClientResponseBodySize), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ClientResponseBodySize) Inst() metric.Int64Histogram {
-	return m.Int64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ClientResponseBodySize) Name() string {
-	return "http.client.response.body.size"
-}
+func (ClientResponseBodySize) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ClientResponseBodySize) Unit() string {
-	return "By"
-}
+func (ClientResponseBodySize) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ClientResponseBodySize) Description() string {
-	return "Size of HTTP client response bodies."
-}
+func (ClientResponseBodySize) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The serverAddress is the server domain name if available without reverse DNS
-// lookup; otherwise, IP address or Unix domain socket name.
-//
-// The serverPort is the server port number.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// The size of the response payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ClientResponseBodySize) Record(
 	ctx context.Context,
 	val int64,
@@ -1156,113 +531,45 @@ func (m ClientResponseBodySize) Record(
 	serverPort int,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("server.address", serverAddress),
-			attribute.Int("server.port", serverPort),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("server.address", serverAddress),
-				attribute.Int("server.port", serverPort),
-			)...,
-		),
-	)
-
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// The size of the response payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ClientResponseBodySize) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ClientResponseBodySize) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ClientResponseBodySize) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ClientResponseBodySize) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLTemplate returns an optional attribute for the "url.template" semantic
-// convention. It represents the low-cardinality template of an
-// [absolute path reference].
-//
-// [absolute path reference]: https://www.rfc-editor.org/rfc/rfc3986#section-4.2
 func (ClientResponseBodySize) AttrURLTemplate(val string) attribute.KeyValue {
-	return attribute.String("url.template", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ClientResponseBodySize) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns an optional attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ClientResponseBodySize) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ServerActiveRequests is an instrument used to record metric values conforming
-// to the "http.server.active_requests" semantic conventions. It represents the
-// number of active HTTP server requests.
 type ServerActiveRequests struct {
 	metric.Int64UpDownCounter
 }
@@ -1272,61 +579,25 @@ var newServerActiveRequestsOpts = []metric.Int64UpDownCounterOption{
 	metric.WithUnit("{request}"),
 }
 
-// NewServerActiveRequests returns a new ServerActiveRequests instrument.
 func NewServerActiveRequests(
 	m metric.Meter,
 	opt ...metric.Int64UpDownCounterOption,
 ) (ServerActiveRequests, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ServerActiveRequests{noop.Int64UpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newServerActiveRequestsOpts
-	} else {
-		opt = append(opt, newServerActiveRequestsOpts...)
-	}
-
-	i, err := m.Int64UpDownCounter(
-		"http.server.active_requests",
-		opt...,
-	)
-	if err != nil {
-		return ServerActiveRequests{noop.Int64UpDownCounter{}}, err
-	}
-	return ServerActiveRequests{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ServerActiveRequests), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ServerActiveRequests) Inst() metric.Int64UpDownCounter {
-	return m.Int64UpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64UpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ServerActiveRequests) Name() string {
-	return "http.server.active_requests"
-}
+func (ServerActiveRequests) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ServerActiveRequests) Unit() string {
-	return "{request}"
-}
+func (ServerActiveRequests) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ServerActiveRequests) Description() string {
-	return "Number of active HTTP server requests."
-}
+func (ServerActiveRequests) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Add adds incr to the existing count for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The urlScheme is the the [URI scheme] component identifying the used protocol.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (m ServerActiveRequests) Add(
 	ctx context.Context,
 	incr int64,
@@ -1334,68 +605,25 @@ func (m ServerActiveRequests) Add(
 	urlScheme string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("url.scheme", urlScheme),
-		))
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("url.scheme", urlScheme),
-			)...,
-		),
-	)
-
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AddSet adds incr to the existing count for set.
 func (m ServerActiveRequests) AddSet(ctx context.Context, incr int64, set attribute.Set) {
-	if !m.Int64UpDownCounter.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64UpDownCounter.Add(ctx, incr)
-		return
-	}
-
-	o := metricpool.AddOptions()
-	defer metricpool.PutAddOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64UpDownCounter.Add(ctx, incr, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the name of the local HTTP server that
-// received the request.
 func (ServerActiveRequests) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the port of the local HTTP server that received the
-// request.
 func (ServerActiveRequests) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ServerActiveRequestsObservable is an instrument used to record metric values
-// conforming to the "http.server.active_requests" semantic conventions. It
-// represents the number of active HTTP server requests.
 type ServerActiveRequestsObservable struct {
 	metric.Int64ObservableUpDownCounter
 }
@@ -1405,85 +633,45 @@ var newServerActiveRequestsObservableOpts = []metric.Int64ObservableUpDownCounte
 	metric.WithUnit("{request}"),
 }
 
-// NewServerActiveRequestsObservable returns a new ServerActiveRequestsObservable
-// instrument.
 func NewServerActiveRequestsObservable(
 	m metric.Meter,
 	opt ...metric.Int64ObservableUpDownCounterOption,
 ) (ServerActiveRequestsObservable, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ServerActiveRequestsObservable{noop.Int64ObservableUpDownCounter{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newServerActiveRequestsObservableOpts
-	} else {
-		opt = append(opt, newServerActiveRequestsObservableOpts...)
-	}
-
-	i, err := m.Int64ObservableUpDownCounter(
-		"http.server.active_requests",
-		opt...,
-	)
-	if err != nil {
-		return ServerActiveRequestsObservable{noop.Int64ObservableUpDownCounter{}}, err
-	}
-	return ServerActiveRequestsObservable{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ServerActiveRequestsObservable), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ServerActiveRequestsObservable) Inst() metric.Int64ObservableUpDownCounter {
-	return m.Int64ObservableUpDownCounter
+	_ = "STUB: not implemented"
+	return *new(metric.Int64ObservableUpDownCounter)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ServerActiveRequestsObservable) Name() string {
-	return "http.server.active_requests"
-}
+func (ServerActiveRequestsObservable) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ServerActiveRequestsObservable) Unit() string {
-	return "{request}"
-}
+func (ServerActiveRequestsObservable) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ServerActiveRequestsObservable) Description() string {
-	return "Number of active HTTP server requests."
-}
+func (ServerActiveRequestsObservable) Description() string { _ = "STUB: not implemented"; return "" }
 
-// AttrRequestMethod returns a required attribute for the "http.request.method"
-// semantic convention. It represents the HTTP request method.
 func (ServerActiveRequestsObservable) AttrRequestMethod(val RequestMethodAttr) attribute.KeyValue {
-	return attribute.String("http.request.method", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrURLScheme returns a required attribute for the "url.scheme" semantic
-// convention. It represents the [URI scheme] component identifying the used
-// protocol.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (ServerActiveRequestsObservable) AttrURLScheme(val string) attribute.KeyValue {
-	return attribute.String("url.scheme", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the name of the local HTTP server that
-// received the request.
 func (ServerActiveRequestsObservable) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the port of the local HTTP server that received the
-// request.
 func (ServerActiveRequestsObservable) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ServerRequestBodySize is an instrument used to record metric values conforming
-// to the "http.server.request.body.size" semantic conventions. It represents the
-// size of HTTP server request bodies.
 type ServerRequestBodySize struct {
 	metric.Int64Histogram
 }
@@ -1493,68 +681,25 @@ var newServerRequestBodySizeOpts = []metric.Int64HistogramOption{
 	metric.WithUnit("By"),
 }
 
-// NewServerRequestBodySize returns a new ServerRequestBodySize instrument.
 func NewServerRequestBodySize(
 	m metric.Meter,
 	opt ...metric.Int64HistogramOption,
 ) (ServerRequestBodySize, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ServerRequestBodySize{noop.Int64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newServerRequestBodySizeOpts
-	} else {
-		opt = append(opt, newServerRequestBodySizeOpts...)
-	}
-
-	i, err := m.Int64Histogram(
-		"http.server.request.body.size",
-		opt...,
-	)
-	if err != nil {
-		return ServerRequestBodySize{noop.Int64Histogram{}}, err
-	}
-	return ServerRequestBodySize{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ServerRequestBodySize), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ServerRequestBodySize) Inst() metric.Int64Histogram {
-	return m.Int64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ServerRequestBodySize) Name() string {
-	return "http.server.request.body.size"
-}
+func (ServerRequestBodySize) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ServerRequestBodySize) Unit() string {
-	return "By"
-}
+func (ServerRequestBodySize) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ServerRequestBodySize) Description() string {
-	return "Size of HTTP server request bodies."
-}
+func (ServerRequestBodySize) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The urlScheme is the the [URI scheme] component identifying the used protocol.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
-//
-// The size of the request payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ServerRequestBodySize) Record(
 	ctx context.Context,
 	val int64,
@@ -1562,122 +707,55 @@ func (m ServerRequestBodySize) Record(
 	urlScheme string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("url.scheme", urlScheme),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("url.scheme", urlScheme),
-			)...,
-		),
-	)
-
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// The size of the request payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ServerRequestBodySize) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ServerRequestBodySize) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ServerRequestBodySize) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRoute returns an optional attribute for the "http.route" semantic
-// convention. It represents the matched route template for the request. This
-// MUST be low-cardinality and include all static path segments, with dynamic
-// path segments represented with placeholders.
 func (ServerRequestBodySize) AttrRoute(val string) attribute.KeyValue {
-	return attribute.String("http.route", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ServerRequestBodySize) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ServerRequestBodySize) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the name of the local HTTP server that
-// received the request.
 func (ServerRequestBodySize) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the port of the local HTTP server that received the
-// request.
 func (ServerRequestBodySize) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrUserAgentSyntheticType returns an optional attribute for the
-// "user_agent.synthetic.type" semantic convention. It represents the specifies
-// the category of synthetic traffic, such as tests or bots.
 func (ServerRequestBodySize) AttrUserAgentSyntheticType(val UserAgentSyntheticTypeAttr) attribute.KeyValue {
-	return attribute.String("user_agent.synthetic.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ServerRequestDuration is an instrument used to record metric values conforming
-// to the "http.server.request.duration" semantic conventions. It represents the
-// duration of HTTP server requests.
 type ServerRequestDuration struct {
 	metric.Float64Histogram
 }
@@ -1688,61 +766,25 @@ var newServerRequestDurationOpts = []metric.Float64HistogramOption{
 	metric.WithExplicitBucketBoundaries([]float64{0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10}...),
 }
 
-// NewServerRequestDuration returns a new ServerRequestDuration instrument.
 func NewServerRequestDuration(
 	m metric.Meter,
 	opt ...metric.Float64HistogramOption,
 ) (ServerRequestDuration, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ServerRequestDuration{noop.Float64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newServerRequestDurationOpts
-	} else {
-		opt = append(opt, newServerRequestDurationOpts...)
-	}
-
-	i, err := m.Float64Histogram(
-		"http.server.request.duration",
-		opt...,
-	)
-	if err != nil {
-		return ServerRequestDuration{noop.Float64Histogram{}}, err
-	}
-	return ServerRequestDuration{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ServerRequestDuration), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ServerRequestDuration) Inst() metric.Float64Histogram {
-	return m.Float64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Float64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ServerRequestDuration) Name() string {
-	return "http.server.request.duration"
-}
+func (ServerRequestDuration) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ServerRequestDuration) Unit() string {
-	return "s"
-}
+func (ServerRequestDuration) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ServerRequestDuration) Description() string {
-	return "Duration of HTTP server requests."
-}
+func (ServerRequestDuration) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The urlScheme is the the [URI scheme] component identifying the used protocol.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
 func (m ServerRequestDuration) Record(
 	ctx context.Context,
 	val float64,
@@ -1750,115 +792,55 @@ func (m ServerRequestDuration) Record(
 	urlScheme string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Float64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("url.scheme", urlScheme),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("url.scheme", urlScheme),
-			)...,
-		),
-	)
-
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
 func (m ServerRequestDuration) RecordSet(ctx context.Context, val float64, set attribute.Set) {
-	if !m.Float64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Float64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Float64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ServerRequestDuration) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ServerRequestDuration) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRoute returns an optional attribute for the "http.route" semantic
-// convention. It represents the matched route template for the request. This
-// MUST be low-cardinality and include all static path segments, with dynamic
-// path segments represented with placeholders.
 func (ServerRequestDuration) AttrRoute(val string) attribute.KeyValue {
-	return attribute.String("http.route", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ServerRequestDuration) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ServerRequestDuration) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the name of the local HTTP server that
-// received the request.
 func (ServerRequestDuration) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the port of the local HTTP server that received the
-// request.
 func (ServerRequestDuration) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrUserAgentSyntheticType returns an optional attribute for the
-// "user_agent.synthetic.type" semantic convention. It represents the specifies
-// the category of synthetic traffic, such as tests or bots.
 func (ServerRequestDuration) AttrUserAgentSyntheticType(val UserAgentSyntheticTypeAttr) attribute.KeyValue {
-	return attribute.String("user_agent.synthetic.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// ServerResponseBodySize is an instrument used to record metric values
-// conforming to the "http.server.response.body.size" semantic conventions. It
-// represents the size of HTTP server response bodies.
 type ServerResponseBodySize struct {
 	metric.Int64Histogram
 }
@@ -1868,68 +850,25 @@ var newServerResponseBodySizeOpts = []metric.Int64HistogramOption{
 	metric.WithUnit("By"),
 }
 
-// NewServerResponseBodySize returns a new ServerResponseBodySize instrument.
 func NewServerResponseBodySize(
 	m metric.Meter,
 	opt ...metric.Int64HistogramOption,
 ) (ServerResponseBodySize, error) {
-	// Check if the meter is nil.
-	if m == nil {
-		return ServerResponseBodySize{noop.Int64Histogram{}}, nil
-	}
-
-	if len(opt) == 0 {
-		opt = newServerResponseBodySizeOpts
-	} else {
-		opt = append(opt, newServerResponseBodySizeOpts...)
-	}
-
-	i, err := m.Int64Histogram(
-		"http.server.response.body.size",
-		opt...,
-	)
-	if err != nil {
-		return ServerResponseBodySize{noop.Int64Histogram{}}, err
-	}
-	return ServerResponseBodySize{i}, nil
+	_ = "STUB: not implemented"
+	return *new(ServerResponseBodySize), nil
 }
 
-// Inst returns the underlying metric instrument.
 func (m ServerResponseBodySize) Inst() metric.Int64Histogram {
-	return m.Int64Histogram
+	_ = "STUB: not implemented"
+	return *new(metric.Int64Histogram)
 }
 
-// Name returns the semantic convention name of the instrument.
-func (ServerResponseBodySize) Name() string {
-	return "http.server.response.body.size"
-}
+func (ServerResponseBodySize) Name() string { _ = "STUB: not implemented"; return "" }
 
-// Unit returns the semantic convention unit of the instrument
-func (ServerResponseBodySize) Unit() string {
-	return "By"
-}
+func (ServerResponseBodySize) Unit() string { _ = "STUB: not implemented"; return "" }
 
-// Description returns the semantic convention description of the instrument
-func (ServerResponseBodySize) Description() string {
-	return "Size of HTTP server response bodies."
-}
+func (ServerResponseBodySize) Description() string { _ = "STUB: not implemented"; return "" }
 
-// Record records val to the current distribution for attrs.
-//
-// The requestMethod is the HTTP request method.
-//
-// The urlScheme is the the [URI scheme] component identifying the used protocol.
-//
-// All additional attrs passed are included in the recorded value.
-//
-// [URI scheme]: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
-//
-// The size of the response payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ServerResponseBodySize) Record(
 	ctx context.Context,
 	val int64,
@@ -1937,115 +876,51 @@ func (m ServerResponseBodySize) Record(
 	urlScheme string,
 	attrs ...attribute.KeyValue,
 ) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if len(attrs) == 0 {
-		m.Int64Histogram.Record(ctx, val, metric.WithAttributes(
-			attribute.String("http.request.method", string(requestMethod)),
-			attribute.String("url.scheme", urlScheme),
-		))
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(
-		*o,
-		metric.WithAttributes(
-			append(
-				attrs[:len(attrs):len(attrs)],
-				attribute.String("http.request.method", string(requestMethod)),
-				attribute.String("url.scheme", urlScheme),
-			)...,
-		),
-	)
-
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// RecordSet records val to the current distribution for set.
-//
-// The size of the response payload body in bytes. This is the number of bytes
-// transferred excluding headers and is often, but not always, present as the
-// [Content-Length] header. For requests using transport encoding, this should be
-// the compressed size.
-//
-// [Content-Length]: https://www.rfc-editor.org/rfc/rfc9110.html#field.content-length
 func (m ServerResponseBodySize) RecordSet(ctx context.Context, val int64, set attribute.Set) {
-	if !m.Int64Histogram.Enabled(ctx) {
-		return
-	}
-	if set.Len() == 0 {
-		m.Int64Histogram.Record(ctx, val)
-		return
-	}
-
-	o := metricpool.RecordOptions()
-	defer metricpool.PutRecordOptions(o)
-
-	*o = append(*o, metric.WithAttributeSet(set))
-	m.Int64Histogram.Record(ctx, val, *o...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// AttrErrorType returns an optional attribute for the "error.type" semantic
-// convention. It represents the describes a class of error the operation ended
-// with.
 func (ServerResponseBodySize) AttrErrorType(val ErrorTypeAttr) attribute.KeyValue {
-	return attribute.String("error.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrResponseStatusCode returns an optional attribute for the
-// "http.response.status_code" semantic convention. It represents the
-// [HTTP response status code].
-//
-// [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 func (ServerResponseBodySize) AttrResponseStatusCode(val int) attribute.KeyValue {
-	return attribute.Int("http.response.status_code", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrRoute returns an optional attribute for the "http.route" semantic
-// convention. It represents the matched route template for the request. This
-// MUST be low-cardinality and include all static path segments, with dynamic
-// path segments represented with placeholders.
 func (ServerResponseBodySize) AttrRoute(val string) attribute.KeyValue {
-	return attribute.String("http.route", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolName returns an optional attribute for the
-// "network.protocol.name" semantic convention. It represents the
-// [OSI application layer] or non-OSI equivalent.
-//
-// [OSI application layer]: https://wikipedia.org/wiki/Application_layer
 func (ServerResponseBodySize) AttrNetworkProtocolName(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.name", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrNetworkProtocolVersion returns an optional attribute for the
-// "network.protocol.version" semantic convention. It represents the actual
-// version of the protocol used for network communication.
 func (ServerResponseBodySize) AttrNetworkProtocolVersion(val string) attribute.KeyValue {
-	return attribute.String("network.protocol.version", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerAddress returns an optional attribute for the "server.address"
-// semantic convention. It represents the name of the local HTTP server that
-// received the request.
 func (ServerResponseBodySize) AttrServerAddress(val string) attribute.KeyValue {
-	return attribute.String("server.address", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrServerPort returns an optional attribute for the "server.port" semantic
-// convention. It represents the port of the local HTTP server that received the
-// request.
 func (ServerResponseBodySize) AttrServerPort(val int) attribute.KeyValue {
-	return attribute.Int("server.port", val)
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }
 
-// AttrUserAgentSyntheticType returns an optional attribute for the
-// "user_agent.synthetic.type" semantic convention. It represents the specifies
-// the category of synthetic traffic, such as tests or bots.
 func (ServerResponseBodySize) AttrUserAgentSyntheticType(val UserAgentSyntheticTypeAttr) attribute.KeyValue {
-	return attribute.String("user_agent.synthetic.type", string(val))
+	_ = "STUB: not implemented"
+	return *new(attribute.KeyValue)
 }

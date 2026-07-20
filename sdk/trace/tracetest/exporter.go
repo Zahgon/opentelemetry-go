@@ -1,9 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package tracetest is a testing helper package for the SDK. User can
-// configure no-op or in-memory exporters to verify different SDK behaviors or
-// custom instrumentation.
 package tracetest
 
 import (
@@ -15,60 +9,39 @@ import (
 
 var _ trace.SpanExporter = (*NoopExporter)(nil)
 
-// NewNoopExporter returns a new no-op exporter.
-func NewNoopExporter() *NoopExporter {
-	return new(NoopExporter)
-}
+func NewNoopExporter() *NoopExporter { _ = "STUB: not implemented"; return nil }
 
-// NoopExporter is an exporter that drops all received spans and performs no
-// action.
 type NoopExporter struct{}
 
-// ExportSpans handles export of spans by dropping them.
-func (*NoopExporter) ExportSpans(context.Context, []trace.ReadOnlySpan) error { return nil }
+func (*NoopExporter) ExportSpans(context.Context, []trace.ReadOnlySpan) error {
+	_ = "STUB: not implemented"
+	return nil
+}
 
-// Shutdown stops the exporter by doing nothing.
-func (*NoopExporter) Shutdown(context.Context) error { return nil }
+func (*NoopExporter) Shutdown(context.Context) error { _ = "STUB: not implemented"; return nil }
 
 var _ trace.SpanExporter = (*InMemoryExporter)(nil)
 
-// NewInMemoryExporter returns a new InMemoryExporter.
-func NewInMemoryExporter() *InMemoryExporter {
-	return new(InMemoryExporter)
-}
+func NewInMemoryExporter() *InMemoryExporter { _ = "STUB: not implemented"; return nil }
 
-// InMemoryExporter is an exporter that stores all received spans in-memory.
 type InMemoryExporter struct {
 	mu sync.Mutex
 	ss SpanStubs
 }
 
-// ExportSpans handles export of spans by storing them in memory.
 func (imsb *InMemoryExporter) ExportSpans(_ context.Context, spans []trace.ReadOnlySpan) error {
-	imsb.mu.Lock()
-	defer imsb.mu.Unlock()
-	imsb.ss = append(imsb.ss, SpanStubsFromReadOnlySpans(spans)...)
+	_ = "STUB: not implemented"
 	return nil
 }
 
-// Shutdown stops the exporter by clearing spans held in memory.
 func (imsb *InMemoryExporter) Shutdown(context.Context) error {
-	imsb.Reset()
+	_ = "STUB: not implemented"
 	return nil
 }
 
-// Reset the current in-memory storage.
-func (imsb *InMemoryExporter) Reset() {
-	imsb.mu.Lock()
-	defer imsb.mu.Unlock()
-	imsb.ss = nil
-}
+func (imsb *InMemoryExporter) Reset() { _ = "STUB: not implemented"; return }
 
-// GetSpans returns the current in-memory stored spans.
 func (imsb *InMemoryExporter) GetSpans() SpanStubs {
-	imsb.mu.Lock()
-	defer imsb.mu.Unlock()
-	ret := make(SpanStubs, len(imsb.ss))
-	copy(ret, imsb.ss)
-	return ret
+	_ = "STUB: not implemented"
+	return *new(SpanStubs)
 }
